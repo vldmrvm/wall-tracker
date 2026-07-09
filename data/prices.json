@@ -1,1 +1,86 @@
-
+{
+  "updated_utc": "2026-07-09T11:14:57Z",
+  "fx": {
+    "EURUSD": 1.14286,
+    "GBPEUR": 1.1716
+  },
+  "positions": [
+    {
+      "symbol": "BNP",
+      "name": "BNP Paribas",
+      "qty": 31.0,
+      "price_eur": 99.34,
+      "value_eur": 3079.54,
+      "stale": false
+    },
+    {
+      "symbol": "PUB",
+      "name": "Publicis Groupe",
+      "qty": 11.0,
+      "price_eur": 84.84,
+      "value_eur": 933.24,
+      "stale": false
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "qty": 4.138681192,
+      "price_eur": 335.42,
+      "value_eur": 1388.21,
+      "stale": false
+    },
+    {
+      "symbol": "AZN",
+      "name": "AstraZeneca",
+      "qty": 6.0,
+      "price_eur": 150.88,
+      "value_eur": 905.27,
+      "stale": false
+    },
+    {
+      "symbol": "TM",
+      "name": "Toyota (ADR)",
+      "qty": 3.0,
+      "price_eur": 155.01,
+      "value_eur": 465.02,
+      "stale": false
+    },
+    {
+      "symbol": "NFLX",
+      "name": "Netflix",
+      "qty": 5.80741023,
+      "price_eur": 66.14,
+      "value_eur": 384.11,
+      "stale": false
+    },
+    {
+      "symbol": "MC",
+      "name": "LVMH",
+      "qty": 1.0,
+      "price_eur": 487.6,
+      "value_eur": 487.6,
+      "stale": false
+    },
+    {
+      "symbol": "CVLT",
+      "name": "CommVault",
+      "qty": 5.0,
+      "price_eur": 128.55,
+      "value_eur": 642.77,
+      "stale": false
+    }
+  ],
+  "bonds": [
+    {
+      "name": "LHV Group 6% суборд 2034",
+      "value_eur": 2018.08
+    },
+    {
+      "name": "Eesti Energia 5%",
+      "value_eur": 803.84
+    }
+  ],
+  "cash_eur": 7000.0,
+  "total_eur": 18107.68,
+  "stale_symbols": []
+}
