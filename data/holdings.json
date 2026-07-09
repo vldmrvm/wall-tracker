@@ -1,7 +1,7 @@
 {
   "plan": {
     "start_date": "2026-07-09",
-    "start_value": 17900,
+    "start_value": 15824.72,
     "monthly": 1000,
     "annual_rate_pct": 10.0,
     "target": 50000,
@@ -9,13 +9,12 @@
   },
   "positions": [
     { "symbol": "BNP",  "yahoo": "BNP.PA", "qty": 31.0,        "name": "BNP Paribas" },
-    { "symbol": "PUB",  "yahoo": "PUB.PA", "qty": 11.0,        "name": "Publicis Groupe" },
+    { "symbol": "PUB",  "yahoo": "PUB.PA", "qty": 12.0,        "name": "Publicis Groupe" },
     { "symbol": "MSFT", "yahoo": "MSFT",   "qty": 4.138681192, "name": "Microsoft" },
     { "symbol": "AZN",  "yahoo": "AZN.L",  "qty": 6.0,         "name": "AstraZeneca" },
     { "symbol": "TM",   "yahoo": "TM",     "qty": 3.0,         "name": "Toyota (ADR)" },
     { "symbol": "NFLX", "yahoo": "NFLX",   "qty": 5.80741023,  "name": "Netflix" },
     { "symbol": "MC",   "yahoo": "MC.PA",  "qty": 1.0,         "name": "LVMH" },
-    { "symbol": "CVLT", "yahoo": "CVLT",   "qty": 5.0,         "name": "CommVault" }
   ],
   "bonds": [
     {
@@ -36,7 +35,7 @@
     }
   ],
   "cash": {
-    "mmf_eur": 7000.0,
+    "mmf_eur": 3 289.57,
     "note": "BlackRock ICS EUR MMF + свободный кэш. Обновляется парсером выписки или руками."
   }
 }
