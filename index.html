@@ -1,158 +1,284 @@
-#!/usr/bin/env python3
-"""
-Тянет цены с Yahoo Finance, считает стоимость портфеля в EUR,
-пишет data/prices.json и добавляет точку в data/history.json (одна на день,
-последнее значение дня побеждает).
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Путь к €50 000</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap');
+  :root {
+    --bg:#0F1512; --card:#161E1A; --line:#25302A;
+    --ink:#E9EFEA; --sub:#8AA095;
+    --green:#3DC98F; --green-dim:#1E5E44; --amber:#E8A13D; --red:#E0684B;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    background:var(--bg); color:var(--ink);
+    font-family:'Inter',sans-serif; overflow:hidden;
+    padding:3vh 3vw; display:flex; flex-direction:column; gap:2vh;
+  }
+  .top { display:flex; justify-content:space-between; align-items:flex-start; }
+  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:1.4vh;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--green); }
+  h1 { font-family:'Sora',sans-serif; font-weight:700; font-size:3.6vh;
+    letter-spacing:-0.02em; margin-top:.4vh; }
+  .updated { font-family:'JetBrains Mono',monospace; font-size:1.5vh;
+    color:var(--sub); text-align:right; line-height:1.6; }
+  .updated .dot { display:inline-block; width:1vh; height:1vh; border-radius:50%;
+    background:var(--green); margin-right:.6vh; animation:pulse 3s infinite; }
+  @keyframes pulse { 50% { opacity:.3; } }
 
-Запуск: python scripts/update_prices.py
-Зависимости: pip install yfinance
-"""
-from __future__ import annotations
+  .nums { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:1.5vw; }
+  .num { background:var(--card); border:1px solid var(--line);
+    border-radius:1.4vh; padding:2vh 1.6vw; }
+  .num .k { font-size:1.5vh; color:var(--sub); text-transform:uppercase;
+    letter-spacing:.12em; margin-bottom:.8vh; }
+  .num .v { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:4.4vh; }
+  .num .v.small { font-size:3.4vh; }
+  .num .s { font-size:1.6vh; color:var(--sub); margin-top:.6vh; }
+  .pos { color:var(--green); } .neg { color:var(--red); } .amb { color:var(--amber); }
 
-import json
-import sys
-from datetime import datetime, timezone, date
-from pathlib import Path
+  .barwrap { background:var(--card); border:1px solid var(--line);
+    border-radius:1.4vh; padding:1.6vh 1.6vw; }
+  .bar { position:relative; height:3.4vh; border-radius:.8vh;
+    background:#0B100D; overflow:hidden; border:1px solid var(--line); }
+  .bar .fill { position:absolute; inset:0; width:0%;
+    background:linear-gradient(90deg,var(--green-dim),var(--green));
+    transition:width 1.2s ease; }
+  .bar .txt { position:absolute; inset:0; display:flex; align-items:center;
+    justify-content:space-between; padding:0 1vw;
+    font-family:'JetBrains Mono',monospace; font-size:1.8vh; font-weight:600; }
 
-ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data"
+  .chartcard { flex:1; background:var(--card); border:1px solid var(--line);
+    border-radius:1.4vh; padding:1.8vh 1.4vw; min-height:0;
+    display:flex; flex-direction:column; }
+  .legend { display:flex; gap:2vw; font-size:1.6vh; color:var(--sub); margin-bottom:1vh; }
+  .legend .sw { display:inline-block; width:2.4vh; height:.5vh; border-radius:2px;
+    vertical-align:middle; margin-right:.6vh; }
+  .chartbox { flex:1; position:relative; min-height:0; }
+  #err { display:none; color:var(--red); font-family:'JetBrains Mono',monospace;
+    font-size:1.6vh; padding:1vh 0; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <div class="eyebrow">План: средняя S&P 500 · факт: Lightyear</div>
+      <h1>Путь к €50 000</h1>
+    </div>
+    <div class="updated">
+      <div><span class="dot"></span><span id="updated">загрузка…</span></div>
+      <div id="fxline"></div>
+    </div>
+  </div>
 
-HOLDINGS_F = DATA / "holdings.json"
-PRICES_F = DATA / "prices.json"
-HISTORY_F = DATA / "history.json"
+  <div class="nums">
+    <div class="num">
+      <div class="k">Портфель сейчас</div>
+      <div class="v" id="total">—</div>
+      <div class="s" id="totalnote"></div>
+    </div>
+    <div class="num">
+      <div class="k">Против плана</div>
+      <div class="v small" id="delta">—</div>
+      <div class="s" id="deltanote"></div>
+    </div>
+    <div class="num">
+      <div class="k">Цель по плану</div>
+      <div class="v small amb" id="eta">—</div>
+      <div class="s" id="etanote"></div>
+    </div>
+  </div>
 
+  <div class="barwrap">
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+      <div class="txt"><span id="barleft">—</span><span id="barright">€50 000</span></div>
+    </div>
+  </div>
 
-# ── котировки ──────────────────────────────────────────────────────────
-def fetch_quotes(tickers: list[str]) -> dict[str, float]:
-    """Последняя цена по каждому тикеру. Падает по одному тикеру — не падает весь скрипт."""
-    import yfinance as yf
+  <div class="chartcard">
+    <div class="legend">
+      <span><span class="sw" style="background:var(--green)"></span>План (S&P 500)</span>
+      <span><span class="sw" style="background:var(--amber)"></span>Факт</span>
+    </div>
+    <div id="err"></div>
+    <div class="chartbox"><canvas id="chart"></canvas></div>
+  </div>
 
-    out: dict[str, float] = {}
-    for t in tickers:
-        try:
-            h = yf.Ticker(t).history(period="5d")
-            if len(h):
-                out[t] = float(h["Close"].iloc[-1])
-            else:
-                print(f"WARN: нет данных по {t}", file=sys.stderr)
-        except Exception as e:  # noqa: BLE001
-            print(f"WARN: {t}: {e}", file=sys.stderr)
-    return out
+<script>
+const MONTHS_RU = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+const fmtEur = v => "€" + Math.round(v).toLocaleString("ru-RU");
+let chart = null;
 
+function monthLabel(startDate, m) {
+  const d = new Date(startDate);
+  d.setMonth(d.getMonth() + Math.round(m));
+  return MONTHS_RU[d.getMonth()] + " " + String(d.getFullYear()).slice(2);
+}
+function monthsBetween(fromIso, toIso) {
+  const a = new Date(fromIso), b = new Date(toIso);
+  return (b - a) / (1000 * 60 * 60 * 24 * 30.44);
+}
 
-def to_eur(price: float, ticker: str, fx: dict[str, float]) -> float:
-    """Конвертация в EUR. AZN.L котируется в пенсах (GBp)."""
-    if ticker.endswith(".PA") or ticker.endswith(".DE") or ticker.endswith(".AS"):
-        return price
-    if ticker.endswith(".L"):
-        gbp = price / 100.0  # пенсы -> фунты
-        return gbp * fx["GBPEUR"]
-    # всё остальное считаем USD-листингом
-    return price / fx["EURUSD"]
+function buildPlan(plan) {
+  const pts = [{ x: 0, y: plan.start_value }];
+  let v = plan.start_value, hit = null;
+  for (let m = 1; m <= 300; m++) {
+    v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
+    pts.push({ x: m, y: v });
+    if (hit === null && v >= plan.target) { hit = m; break; }
+  }
+  return { pts, hit };
+}
+function planValueAt(plan, m) {
+  let v = plan.start_value;
+  const whole = Math.floor(m), frac = m - whole;
+  let prev = v;
+  for (let i = 1; i <= whole + 1; i++) {
+    prev = v;
+    v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
+  }
+  return prev + (v - prev) * Math.min(frac, 1);
+}
 
+async function loadJson(path) {
+  const r = await fetch(path + "?ts=" + Date.now(), { cache: "no-store" });
+  if (!r.ok) throw new Error(path + ": " + r.status);
+  return r.json();
+}
 
-# ── облигации: номинал + накопленный купон ─────────────────────────────
-def last_coupon_date(today: date, months: list[int], day: int) -> date:
-    candidates = []
-    for y in (today.year - 1, today.year):
-        for m in months:
-            try:
-                d = date(y, m, day)
-            except ValueError:
-                continue
-            if d <= today:
-                candidates.append(d)
-    return max(candidates)
+async function refresh() {
+  try {
+    const [holdings, prices, history] = await Promise.all([
+      loadJson("data/holdings.json"),
+      loadJson("data/prices.json"),
+      loadJson("data/history.json"),
+    ]);
+    const plan = holdings.plan;
+    const { pts: planPts, hit } = buildPlan(plan);
 
+    const factPts = history.map(h => ({
+      x: Math.max(0, monthsBetween(plan.start_date, h.date)),
+      y: h.total_eur,
+    }));
 
-def bond_value(bond: dict, today: date) -> float:
-    nominal = float(bond["nominal_eur"])
-    rate = float(bond["coupon_rate_pct"]) / 100.0
-    last = last_coupon_date(today, bond["coupon_months"], bond["coupon_day"])
-    accrued = nominal * rate * (today - last).days / 365.0
-    return nominal + accrued
+    const total = prices.total_eur;
+    const nowM = monthsBetween(plan.start_date, new Date().toISOString());
+    const planNow = planValueAt(plan, Math.max(0, nowM));
+    const delta = total - planNow;
 
+    document.getElementById("total").textContent = fmtEur(total);
+    document.getElementById("totalnote").textContent =
+      prices.positions.length + " акций · бонды · MMF" +
+      (prices.stale_symbols?.length ? " · часть цен устарела" : "");
 
-# ── main ───────────────────────────────────────────────────────────────
-def main() -> None:
-    holdings = json.loads(HOLDINGS_F.read_text(encoding="utf-8"))
-    today = datetime.now(timezone.utc)
+    const dEl = document.getElementById("delta");
+    dEl.className = "v small " + (delta >= 0 ? "pos" : "neg");
+    dEl.textContent = (delta >= 0 ? "+€" : "−€") + Math.abs(Math.round(delta)).toLocaleString("ru-RU");
+    document.getElementById("deltanote").textContent =
+      "план на сегодня: " + fmtEur(planNow);
 
-    tickers = [p["yahoo"] for p in holdings["positions"]]
-    quotes = fetch_quotes(tickers + ["EURUSD=X", "GBPEUR=X"])
+    document.getElementById("eta").textContent =
+      hit ? monthLabel(plan.start_date, hit) : "> 25 лет";
+    document.getElementById("etanote").textContent =
+      hit ? (hit / 12).toFixed(1) + " лет · " + plan.annual_rate_pct + "% + " + fmtEur(plan.monthly) + "/мес" : "";
 
-    fx = {
-        "EURUSD": quotes.get("EURUSD=X", 1.10),
-        "GBPEUR": quotes.get("GBPEUR=X", 1.15),
-    }
+    const pct = Math.min(100, total / plan.target * 100);
+    document.getElementById("fill").style.width = pct + "%";
+    document.getElementById("barleft").textContent = fmtEur(total) + " · " + pct.toFixed(1) + "%";
+    document.getElementById("barright").textContent = fmtEur(plan.target);
 
-    rows = []
-    total = 0.0
-    stale = []
+    const upd = new Date(prices.updated_utc);
+    document.getElementById("updated").textContent =
+      "обновлено " + upd.toLocaleString("ru-RU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    document.getElementById("fxline").textContent =
+      "EUR/USD " + prices.fx.EURUSD.toFixed(4);
 
-    # если тикер не ответил — берём прошлую цену из prices.json, чтобы не «терять» позицию
-    prev = {}
-    if PRICES_F.exists():
-        try:
-            prev = {r["symbol"]: r for r in json.loads(PRICES_F.read_text())["positions"]}
-        except Exception:  # noqa: BLE001
-            prev = {}
+    drawChart(planPts, factPts, plan);
+    document.getElementById("err").style.display = "none";
+  } catch (e) {
+    const el = document.getElementById("err");
+    el.textContent = "Ошибка данных: " + e.message + " — повторю через 15 мин";
+    el.style.display = "block";
+  }
+}
 
-    for p in holdings["positions"]:
-        t, sym, qty = p["yahoo"], p["symbol"], float(p["qty"])
-        if t in quotes:
-            price_eur = to_eur(quotes[t], t, fx)
-        elif sym in prev:
-            price_eur = prev[sym]["price_eur"]
-            stale.append(sym)
-        else:
-            print(f"WARN: пропускаю {sym} — нет ни свежей, ни старой цены", file=sys.stderr)
-            continue
-        value = price_eur * qty
-        total += value
-        rows.append({
-            "symbol": sym, "name": p["name"], "qty": qty,
-            "price_eur": round(price_eur, 2), "value_eur": round(value, 2),
-            "stale": sym in stale,
-        })
+function drawChart(planPts, factPts, plan) {
+  const css = getComputedStyle(document.documentElement);
+  const green = css.getPropertyValue("--green").trim();
+  const amber = css.getPropertyValue("--amber").trim();
+  const sub = css.getPropertyValue("--sub").trim();
+  const line = css.getPropertyValue("--line").trim();
 
-    bond_rows = []
-    for b in holdings["bonds"]:
-        v = bond_value(b, today.date())
-        total += v
-        bond_rows.append({"name": b["name"], "value_eur": round(v, 2)})
+  const data = {
+    datasets: [
+      {
+        label: "План", data: planPts, borderColor: green, borderWidth: 3,
+        pointRadius: 0, fill: { target: "origin" },
+        backgroundColor: "rgba(61,201,143,0.08)", tension: 0.25,
+      },
+      {
+        label: "Факт", data: factPts, borderColor: amber, borderWidth: 2.5,
+        pointRadius: 4, pointBackgroundColor: amber, tension: 0.1,
+      },
+    ],
+  };
+  const opts = {
+    responsive: true, maintainAspectRatio: false, animation: false,
+    scales: {
+      x: {
+        type: "linear", min: 0, max: planPts[planPts.length - 1].x,
+        grid: { color: line }, border: { color: line },
+        ticks: {
+          color: sub, font: { family: "JetBrains Mono", size: 13 },
+          stepSize: 3, callback: v => monthLabel(plan.start_date, v),
+          maxTicksLimit: 12,
+        },
+      },
+      y: {
+        min: 0, max: Math.ceil(plan.target * 1.15 / 5000) * 5000,
+        grid: { color: line }, border: { display: false },
+        ticks: {
+          color: sub, font: { family: "JetBrains Mono", size: 13 },
+          callback: v => "€" + v / 1000 + "k",
+        },
+      },
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+      annotationTarget: false,
+    },
+  };
+  if (chart) { chart.data = data; chart.options = opts; chart.update(); }
+  else chart = new Chart(document.getElementById("chart"), { type: "line", data, options: opts });
 
-    cash = float(holdings["cash"]["mmf_eur"])
-    total += cash
+  // линия цели
+  if (!Chart.registry.plugins.get("targetline")) {
+    Chart.register({
+      id: "targetline",
+      afterDraw(c) {
+        const y = c.scales.y.getPixelForValue(plan.target);
+        const { left, right } = c.chartArea;
+        const ctx = c.ctx;
+        ctx.save();
+        ctx.strokeStyle = amber; ctx.setLineDash([8, 6]); ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+        ctx.fillStyle = amber; ctx.font = "13px JetBrains Mono";
+        ctx.fillText("€" + plan.target / 1000 + "k", right - 46, y - 8);
+        ctx.restore();
+      },
+    });
+  }
+}
 
-    prices = {
-        "updated_utc": today.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "fx": {k: round(v, 5) for k, v in fx.items()},
-        "positions": rows,
-        "bonds": bond_rows,
-        "cash_eur": round(cash, 2),
-        "total_eur": round(total, 2),
-        "stale_symbols": stale,
-    }
-    PRICES_F.write_text(json.dumps(prices, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    # история: одна точка на день
-    history = []
-    if HISTORY_F.exists():
-        try:
-            history = json.loads(HISTORY_F.read_text())
-        except Exception:  # noqa: BLE001
-            history = []
-    today_s = today.strftime("%Y-%m-%d")
-    history = [h for h in history if h["date"] != today_s]
-    history.append({"date": today_s, "total_eur": round(total, 2)})
-    history.sort(key=lambda h: h["date"])
-    HISTORY_F.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    print(f"OK: total €{total:,.0f} ({len(rows)} акций, {len(bond_rows)} бондов, кэш €{cash:,.0f})")
-    if stale:
-        print(f"Устаревшие цены: {', '.join(stale)}", file=sys.stderr)
-
-
-if __name__ == "__main__":
-    main()
+refresh();
+setInterval(refresh, 15 * 60 * 1000); // каждые 15 минут перечитываем json'ы
+</script>
+</body>
+</html>
