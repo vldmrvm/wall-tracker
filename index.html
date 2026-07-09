@@ -4,76 +4,66 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Путь к €50 000</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="chart.umd.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap');
   :root {
-    --bg:#0F1512; --card:#161E1A; --line:#25302A;
-    --ink:#E9EFEA; --sub:#8AA095;
-    --green:#3DC98F; --green-dim:#1E5E44; --amber:#E8A13D; --red:#E0684B;
+    --font:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --bg:#F5F6F7; --panel:#FFFFFF; --frame:#E2E5E8; --ink:#1C1F23; --sub:#6B7683;
+    --plan:#1F77B4; --fact:#FF7F0E; --pos:#1F9D55; --neg:#D64545;
+    --grid:#ECEEF0; --axis:#C7CCD1; --radius:12px;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
   body {
-    background:var(--bg); color:var(--ink);
-    font-family:'Inter',sans-serif; overflow:hidden;
-    padding:3vh 3vw; display:flex; flex-direction:column; gap:2vh;
+    background:var(--bg); color:var(--ink); font-family:var(--font);
+    overflow:hidden; padding:2.6vh 2.6vw;
+    display:flex; flex-direction:column; gap:1.8vh;
+    font-variant-numeric: tabular-nums;
   }
-  .top { display:flex; justify-content:space-between; align-items:flex-start; }
-  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:1.4vh;
-    letter-spacing:.2em; text-transform:uppercase; color:var(--green); }
-  h1 { font-family:'Sora',sans-serif; font-weight:700; font-size:3.6vh;
-    letter-spacing:-0.02em; margin-top:.4vh; }
-  .updated { font-family:'JetBrains Mono',monospace; font-size:1.5vh;
-    color:var(--sub); text-align:right; line-height:1.6; }
+  .top { display:flex; justify-content:space-between; align-items:baseline;
+    padding-bottom:1vh; border-bottom:1.5px solid var(--frame); }
+  h1 { font-size:3vh; font-weight:700; letter-spacing:-0.01em; }
+  h1 .thin { font-weight:400; color:var(--sub); font-size:2vh; }
+  .updated { font-size:1.7vh; color:var(--sub); text-align:right; }
   .updated .dot { display:inline-block; width:1vh; height:1vh; border-radius:50%;
-    background:var(--green); margin-right:.6vh; animation:pulse 3s infinite; }
-  @keyframes pulse { 50% { opacity:.3; } }
+    background:var(--pos); margin-right:.5vh; animation:pulse 3s infinite; }
+  @keyframes pulse { 50% { opacity:.25; } }
 
-  .nums { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:1.5vw; }
-  .num { background:var(--card); border:1px solid var(--line);
-    border-radius:1.4vh; padding:2vh 1.6vw; }
-  .num .k { font-size:1.5vh; color:var(--sub); text-transform:uppercase;
-    letter-spacing:.12em; margin-bottom:.8vh; }
-  .num .v { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:4.4vh; }
-  .num .v.small { font-size:3.4vh; }
-  .num .s { font-size:1.6vh; color:var(--sub); margin-top:.6vh; }
-  .pos { color:var(--green); } .neg { color:var(--red); } .amb { color:var(--amber); }
+  .nums { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:1.4vw; }
+  .num { border:1px solid var(--frame); background:var(--panel);
+    border-radius:var(--radius); padding:1.8vh 1.4vw; }
+  .num .k { font-size:1.5vh; color:var(--sub); margin-bottom:.6vh;
+    text-transform:uppercase; letter-spacing:.06em; }
+  .num .v { font-weight:700; font-size:4.6vh; letter-spacing:-0.015em; }
+  .num .v.small { font-size:3.6vh; }
+  .num .s { font-size:1.6vh; color:var(--sub); margin-top:.5vh; }
+  .pos { color:var(--pos); } .neg { color:var(--neg); } .planc { color:var(--plan); }
 
-  .barwrap { background:var(--card); border:1px solid var(--line);
-    border-radius:1.4vh; padding:1.6vh 1.6vw; }
-  .bar { position:relative; height:3.4vh; border-radius:.8vh;
-    background:#0B100D; overflow:hidden; border:1px solid var(--line); }
-  .bar .fill { position:absolute; inset:0; width:0%;
-    background:linear-gradient(90deg,var(--green-dim),var(--green));
+  .barwrap { border:1px solid var(--frame); background:var(--panel);
+    border-radius:var(--radius); padding:1.3vh 1.4vw; }
+  .bar { position:relative; height:3vh; background:var(--grid);
+    border-radius:.8vh; overflow:hidden; }
+  .bar .fill { position:absolute; inset:0; width:0%; background:var(--plan);
     transition:width 1.2s ease; }
   .bar .txt { position:absolute; inset:0; display:flex; align-items:center;
-    justify-content:space-between; padding:0 1vw;
-    font-family:'JetBrains Mono',monospace; font-size:1.8vh; font-weight:600; }
+    justify-content:space-between; padding:0 1vw; font-size:1.8vh; font-weight:700; }
+  .bar .txt .l { color:#fff; mix-blend-mode:difference; }
 
-  .chartcard { flex:1; background:var(--card); border:1px solid var(--line);
-    border-radius:1.4vh; padding:1.8vh 1.4vw; min-height:0;
+  .chartcard { flex:1; border:1px solid var(--frame); background:var(--panel);
+    border-radius:var(--radius); padding:1.4vh 1vw .6vh; min-height:0;
     display:flex; flex-direction:column; }
-  .legend { display:flex; gap:2vw; font-size:1.6vh; color:var(--sub); margin-bottom:1vh; }
-  .legend .sw { display:inline-block; width:2.4vh; height:.5vh; border-radius:2px;
-    vertical-align:middle; margin-right:.6vh; }
-  .chartbox { flex:1; position:relative; min-height:0; }
-  #err { display:none; color:var(--red); font-family:'JetBrains Mono',monospace;
-    font-size:1.6vh; padding:1vh 0; }
+  .charttitle { text-align:center; font-size:1.9vh; font-weight:700; margin-bottom:.4vh; }
+  .chartbox { flex:1; position:relative; min-height:220px; }
+  #err { display:none; color:var(--neg); font-size:1.6vh; padding:.6vh 0; }
 </style>
 </head>
 <body>
   <div class="top">
-    <div>
-      <div class="eyebrow">План: средняя S&P 500 · факт: Lightyear</div>
-      <h1>Путь к €50 000</h1>
-    </div>
-    <div class="updated">
-      <div><span class="dot"></span><span id="updated">загрузка…</span></div>
-      <div id="fxline"></div>
-    </div>
+    <h1>Путь к €50 000 <span class="thin">· план: средняя S&P 500 · факт: Lightyear</span></h1>
+    <div class="updated"><span class="dot"></span><span id="updated">загрузка…</span>
+      · EUR/USD <span id="fxline">—</span></div>
   </div>
 
   <div class="nums">
@@ -89,7 +79,7 @@
     </div>
     <div class="num">
       <div class="k">Цель по плану</div>
-      <div class="v small amb" id="eta">—</div>
+      <div class="v small planc" id="eta">—</div>
       <div class="s" id="etanote"></div>
     </div>
   </div>
@@ -97,15 +87,12 @@
   <div class="barwrap">
     <div class="bar">
       <div class="fill" id="fill"></div>
-      <div class="txt"><span id="barleft">—</span><span id="barright">€50 000</span></div>
+      <div class="txt"><span class="l" id="barleft">—</span><span id="barright">€50 000</span></div>
     </div>
   </div>
 
   <div class="chartcard">
-    <div class="legend">
-      <span><span class="sw" style="background:var(--green)"></span>План (S&P 500)</span>
-      <span><span class="sw" style="background:var(--amber)"></span>Факт</span>
-    </div>
+    <div class="charttitle">Капитал: план против факта</div>
     <div id="err"></div>
     <div class="chartbox"><canvas id="chart"></canvas></div>
   </div>
@@ -113,8 +100,9 @@
 <script>
 const MONTHS_RU = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
 const fmtEur = v => "€" + Math.round(v).toLocaleString("ru-RU");
-let chart = null;
+let chart = null, TARGET_PLUGIN_DONE = false;
 
+function cssv(n){ return getComputedStyle(document.body).getPropertyValue(n).trim(); }
 function monthLabel(startDate, m) {
   const d = new Date(startDate);
   d.setMonth(d.getMonth() + Math.round(m));
@@ -124,7 +112,6 @@ function monthsBetween(fromIso, toIso) {
   const a = new Date(fromIso), b = new Date(toIso);
   return (b - a) / (1000 * 60 * 60 * 24 * 30.44);
 }
-
 function buildPlan(plan) {
   const pts = [{ x: 0, y: plan.start_value }];
   let v = plan.start_value, hit = null;
@@ -136,16 +123,14 @@ function buildPlan(plan) {
   return { pts, hit };
 }
 function planValueAt(plan, m) {
-  let v = plan.start_value;
+  let v = plan.start_value, prev = v;
   const whole = Math.floor(m), frac = m - whole;
-  let prev = v;
   for (let i = 1; i <= whole + 1; i++) {
     prev = v;
     v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
   }
   return prev + (v - prev) * Math.min(frac, 1);
 }
-
 async function loadJson(path) {
   const r = await fetch(path + "?ts=" + Date.now(), { cache: "no-store" });
   if (!r.ok) throw new Error(path + ": " + r.status);
@@ -161,30 +146,30 @@ async function refresh() {
     ]);
     const plan = holdings.plan;
     const { pts: planPts, hit } = buildPlan(plan);
-
     const factPts = history.map(h => ({
-      x: Math.max(0, monthsBetween(plan.start_date, h.date)),
-      y: h.total_eur,
+      x: Math.max(0, monthsBetween(plan.start_date, h.date)), y: h.total_eur,
     }));
 
     const total = prices.total_eur;
-    const nowM = monthsBetween(plan.start_date, new Date().toISOString());
-    const planNow = planValueAt(plan, Math.max(0, nowM));
+    const nowM = Math.max(0, monthsBetween(plan.start_date, new Date().toISOString()));
+    const planNow = planValueAt(plan, nowM);
     const delta = total - planNow;
 
+    let dayNote = prices.positions.length + " позиций";
+    if (history.length >= 2) {
+      const d = history[history.length - 1].total_eur - history[history.length - 2].total_eur;
+      dayNote = (d >= 0 ? "+€" : "−€") + Math.abs(Math.round(d)).toLocaleString("ru-RU") + " со вчера";
+      document.getElementById("totalnote").className = "s " + (d >= 0 ? "pos" : "neg");
+    }
     document.getElementById("total").textContent = fmtEur(total);
-    document.getElementById("totalnote").textContent =
-      prices.positions.length + " акций · бонды · MMF" +
-      (prices.stale_symbols?.length ? " · часть цен устарела" : "");
+    document.getElementById("totalnote").textContent = dayNote;
 
     const dEl = document.getElementById("delta");
     dEl.className = "v small " + (delta >= 0 ? "pos" : "neg");
     dEl.textContent = (delta >= 0 ? "+€" : "−€") + Math.abs(Math.round(delta)).toLocaleString("ru-RU");
-    document.getElementById("deltanote").textContent =
-      "план на сегодня: " + fmtEur(planNow);
+    document.getElementById("deltanote").textContent = "план на сегодня: " + fmtEur(planNow);
 
-    document.getElementById("eta").textContent =
-      hit ? monthLabel(plan.start_date, hit) : "> 25 лет";
+    document.getElementById("eta").textContent = hit ? monthLabel(plan.start_date, hit) : "> 25 лет";
     document.getElementById("etanote").textContent =
       hit ? (hit / 12).toFixed(1) + " лет · " + plan.annual_rate_pct + "% + " + fmtEur(plan.monthly) + "/мес" : "";
 
@@ -196,8 +181,7 @@ async function refresh() {
     const upd = new Date(prices.updated_utc);
     document.getElementById("updated").textContent =
       "обновлено " + upd.toLocaleString("ru-RU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-    document.getElementById("fxline").textContent =
-      "EUR/USD " + prices.fx.EURUSD.toFixed(4);
+    document.getElementById("fxline").textContent = prices.fx.EURUSD.toFixed(4);
 
     drawChart(planPts, factPts, plan);
     document.getElementById("err").style.display = "none";
@@ -209,57 +193,39 @@ async function refresh() {
 }
 
 function drawChart(planPts, factPts, plan) {
-  const css = getComputedStyle(document.documentElement);
-  const green = css.getPropertyValue("--green").trim();
-  const amber = css.getPropertyValue("--amber").trim();
-  const sub = css.getPropertyValue("--sub").trim();
-  const line = css.getPropertyValue("--line").trim();
-
-  const data = {
-    datasets: [
-      {
-        label: "План", data: planPts, borderColor: green, borderWidth: 3,
-        pointRadius: 0, fill: { target: "origin" },
-        backgroundColor: "rgba(61,201,143,0.08)", tension: 0.25,
-      },
-      {
-        label: "Факт", data: factPts, borderColor: amber, borderWidth: 2.5,
-        pointRadius: 4, pointBackgroundColor: amber, tension: 0.1,
-      },
-    ],
-  };
+  const font = cssv("--font");
+  const data = { datasets: [
+    { label: "План (S&P 500, " + plan.annual_rate_pct + "%)", data: planPts,
+      borderColor: cssv("--plan"), borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
+    { label: "Факт (Lightyear)", data: factPts,
+      borderColor: cssv("--fact"), borderWidth: 2.5, pointRadius: 4,
+      pointBackgroundColor: cssv("--fact"), pointBorderColor: "#fff",
+      pointBorderWidth: 1.2, tension: 0.15 },
+  ]};
   const opts = {
     responsive: true, maintainAspectRatio: false, animation: false,
     scales: {
-      x: {
-        type: "linear", min: 0, max: planPts[planPts.length - 1].x,
-        grid: { color: line }, border: { color: line },
-        ticks: {
-          color: sub, font: { family: "JetBrains Mono", size: 13 },
-          stepSize: 3, callback: v => monthLabel(plan.start_date, v),
-          maxTicksLimit: 12,
-        },
-      },
-      y: {
-        min: 0, max: Math.ceil(plan.target * 1.15 / 5000) * 5000,
-        grid: { color: line }, border: { display: false },
-        ticks: {
-          color: sub, font: { family: "JetBrains Mono", size: 13 },
-          callback: v => "€" + v / 1000 + "k",
-        },
-      },
+      x: { type: "linear", min: 0, max: planPts[planPts.length - 1].x,
+        grid: { color: cssv("--grid") }, border: { color: cssv("--axis"), width: 1.2 },
+        ticks: { color: cssv("--ink"), font: { family: font, size: 14 },
+          stepSize: 3, callback: v => monthLabel(plan.start_date, v), maxTicksLimit: 12 } },
+      y: { min: 0, max: Math.ceil(plan.target * 1.15 / 5000) * 5000,
+        grid: { color: cssv("--grid") }, border: { color: cssv("--axis"), width: 1.2 },
+        ticks: { color: cssv("--ink"), font: { family: font, size: 14 },
+          callback: v => "€" + v / 1000 + "k" } },
     },
     plugins: {
-      legend: { display: false },
+      legend: { position: "top", align: "end",
+        labels: { color: cssv("--ink"), font: { family: font, size: 14 },
+          boxWidth: 26, boxHeight: 3 } },
       tooltip: { enabled: false },
-      annotationTarget: false,
     },
   };
   if (chart) { chart.data = data; chart.options = opts; chart.update(); }
   else chart = new Chart(document.getElementById("chart"), { type: "line", data, options: opts });
 
-  // линия цели
-  if (!Chart.registry.plugins.get("targetline")) {
+  if (!TARGET_PLUGIN_DONE) {
+    TARGET_PLUGIN_DONE = true;
     Chart.register({
       id: "targetline",
       afterDraw(c) {
@@ -267,18 +233,20 @@ function drawChart(planPts, factPts, plan) {
         const { left, right } = c.chartArea;
         const ctx = c.ctx;
         ctx.save();
-        ctx.strokeStyle = amber; ctx.setLineDash([8, 6]); ctx.lineWidth = 1.5;
+        ctx.strokeStyle = cssv("--neg"); ctx.setLineDash([7, 5]); ctx.lineWidth = 1.4;
         ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
-        ctx.fillStyle = amber; ctx.font = "13px JetBrains Mono";
-        ctx.fillText("€" + plan.target / 1000 + "k", right - 46, y - 8);
+        ctx.fillStyle = cssv("--neg"); ctx.font = "13px " + font;
+        ctx.fillText("цель €" + plan.target / 1000 + "k", right - 84, y - 8);
         ctx.restore();
       },
     });
+    chart.update();
   }
 }
 
-refresh();
-setInterval(refresh, 15 * 60 * 1000); // каждые 15 минут перечитываем json'ы
+function boot(){ if (window.Chart) refresh(); else setTimeout(boot, 150); }
+boot();
+setInterval(refresh, 15 * 60 * 1000);
 </script>
 </body>
 </html>
