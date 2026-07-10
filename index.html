@@ -4,64 +4,65 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Путь к €50 000</title>
 <script src="chart.umd.js"></script>
 <style>
   :root {
     --font:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --bg:#F5F6F7; --panel:#FFFFFF; --frame:#E2E5E8; --ink:#1C1F23; --sub:#6B7683;
-    --plan:#1F77B4; --fact:#FF7F0E; --pos:#1F9D55; --neg:#D64545;
-    --grid:#ECEEF0; --axis:#C7CCD1; --radius:12px;
+    --plan:#1F77B4; --bench:#2CA02C; --fact:#FF7F0E; --pos:#1F9D55; --neg:#D64545;
+    --grid:#EEF0F2; --axis:#C7CCD1; --radius:12px;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
   body {
     background:var(--bg); color:var(--ink); font-family:var(--font);
-    overflow:hidden; padding:2.6vh 2.6vw;
-    display:flex; flex-direction:column; gap:1.8vh;
+    overflow:hidden; padding:2.2vh 2.2vw;
+    display:flex; flex-direction:column; gap:1.5vh;
     font-variant-numeric: tabular-nums;
   }
   .top { display:flex; justify-content:space-between; align-items:baseline;
-    padding-bottom:1vh; border-bottom:1.5px solid var(--frame); }
-  h1 { font-size:3vh; font-weight:700; letter-spacing:-0.01em; }
-  h1 .thin { font-weight:400; color:var(--sub); font-size:2vh; }
-  .updated { font-size:1.7vh; color:var(--sub); text-align:right; }
-  .updated .dot { display:inline-block; width:1vh; height:1vh; border-radius:50%;
+    padding-bottom:.8vh; border-bottom:1.5px solid var(--frame); }
+  h1 { font-size:2.8vh; font-weight:700; letter-spacing:-0.01em; }
+  h1 .thin { font-weight:400; color:var(--sub); font-size:1.9vh; }
+  .updated { font-size:1.6vh; color:var(--sub); }
+  .updated .dot { display:inline-block; width:.9vh; height:.9vh; border-radius:50%;
     background:var(--pos); margin-right:.5vh; animation:pulse 3s infinite; }
   @keyframes pulse { 50% { opacity:.25; } }
 
-  .nums { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:1.4vw; }
+  .nums { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:1.3vw; }
   .num { border:1px solid var(--frame); background:var(--panel);
-    border-radius:var(--radius); padding:1.8vh 1.4vw; }
-  .num .k { font-size:1.5vh; color:var(--sub); margin-bottom:.6vh;
+    border-radius:var(--radius); padding:1.4vh 1.3vw; }
+  .num .k { font-size:1.4vh; color:var(--sub); margin-bottom:.5vh;
     text-transform:uppercase; letter-spacing:.06em; }
-  .num .v { font-weight:700; font-size:4.6vh; letter-spacing:-0.015em; }
-  .num .v.small { font-size:3.6vh; }
-  .num .s { font-size:1.6vh; color:var(--sub); margin-top:.5vh; }
+  .num .v { font-weight:700; font-size:4vh; letter-spacing:-0.015em; }
+  .num .v.small { font-size:3.1vh; }
+  .num .s { font-size:1.5vh; color:var(--sub); margin-top:.4vh; }
   .pos { color:var(--pos); } .neg { color:var(--neg); } .planc { color:var(--plan); }
 
   .barwrap { border:1px solid var(--frame); background:var(--panel);
-    border-radius:var(--radius); padding:1.3vh 1.4vw; }
-  .bar { position:relative; height:3vh; background:var(--grid);
-    border-radius:.8vh; overflow:hidden; }
+    border-radius:var(--radius); padding:1.1vh 1.3vw; }
+  .bar { position:relative; height:2.6vh; background:var(--grid);
+    border-radius:.7vh; overflow:hidden; }
   .bar .fill { position:absolute; inset:0; width:0%; background:var(--plan);
     transition:width 1.2s ease; }
   .bar .txt { position:absolute; inset:0; display:flex; align-items:center;
-    justify-content:space-between; padding:0 1vw; font-size:1.8vh; font-weight:700; }
+    justify-content:space-between; padding:0 1vw; font-size:1.7vh; font-weight:700; }
   .bar .txt .l { color:#fff; mix-blend-mode:difference; }
 
-  .chartcard { flex:1; border:1px solid var(--frame); background:var(--panel);
-    border-radius:var(--radius); padding:1.4vh 1vw .6vh; min-height:0;
-    display:flex; flex-direction:column; }
-  .charttitle { text-align:center; font-size:1.9vh; font-weight:700; margin-bottom:.4vh; }
-  .chartbox { flex:1; position:relative; min-height:220px; }
-  #err { display:none; color:var(--neg); font-size:1.6vh; padding:.6vh 0; }
+  .card { border:1px solid var(--frame); background:var(--panel);
+    border-radius:var(--radius); padding:1.2vh 1vw .5vh;
+    display:flex; flex-direction:column; min-height:0; }
+  .main { flex:1.5; }
+  .row { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:1.3vw; min-height:0; }
+  .ct { font-size:1.6vh; font-weight:700; margin:0 0 .3vh .4vw; }
+  .cbox { flex:1; position:relative; min-height:120px; }
+  #err { display:none; color:var(--neg); font-size:1.5vh; padding:.4vh 0; }
 </style>
 </head>
 <body>
   <div class="top">
-    <h1>Путь к €50 000 <span class="thin">· план: средняя S&P 500 · факт: Lightyear</span></h1>
+    <h1>Путь к €50 000 <span class="thin">· против средней и против реального S&P 500</span></h1>
     <div class="updated"><span class="dot"></span><span id="updated">загрузка…</span>
       · EUR/USD <span id="fxline">—</span></div>
   </div>
@@ -78,9 +79,9 @@
       <div class="s" id="deltanote"></div>
     </div>
     <div class="num">
-      <div class="k">Цель по плану</div>
-      <div class="v small planc" id="eta">—</div>
-      <div class="s" id="etanote"></div>
+      <div class="k">Против реального S&P</div>
+      <div class="v small" id="bdelta">—</div>
+      <div class="s" id="bdeltanote"></div>
     </div>
   </div>
 
@@ -91,27 +92,37 @@
     </div>
   </div>
 
-  <div class="chartcard">
-    <div class="charttitle">Капитал: план против факта</div>
+  <div class="card main">
     <div id="err"></div>
-    <div class="chartbox"><canvas id="chart"></canvas></div>
+    <div class="cbox"><canvas id="chart"></canvas></div>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <div class="ct">Отклонение от плана</div>
+      <div class="cbox"><canvas id="devchart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Месячный темп</div>
+      <div class="cbox"><canvas id="pacechart"></canvas></div>
+    </div>
   </div>
 
 <script>
 const MONTHS_RU = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
 const fmtEur = v => "€" + Math.round(v).toLocaleString("ru-RU");
-let chart = null, TARGET_PLUGIN_DONE = false;
+const fmtD = v => (v >= 0 ? "+€" : "−€") + Math.abs(Math.round(v)).toLocaleString("ru-RU");
+let chMain = null, chDev = null, chPace = null;
 
-function cssv(n){ return getComputedStyle(document.body).getPropertyValue(n).trim(); }
+const cssv = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+const FONT = () => cssv("--font");
 function monthLabel(startDate, m) {
   const d = new Date(startDate);
   d.setMonth(d.getMonth() + Math.round(m));
   return MONTHS_RU[d.getMonth()] + " " + String(d.getFullYear()).slice(2);
 }
-function monthsBetween(fromIso, toIso) {
-  const a = new Date(fromIso), b = new Date(toIso);
-  return (b - a) / (1000 * 60 * 60 * 24 * 30.44);
-}
+const monthsBetween = (a, b) => (new Date(b) - new Date(a)) / (1000*60*60*24*30.44);
+
 function buildPlan(plan) {
   const pts = [{ x: 0, y: plan.start_value }];
   let v = plan.start_value, hit = null;
@@ -126,8 +137,7 @@ function planValueAt(plan, m) {
   let v = plan.start_value, prev = v;
   const whole = Math.floor(m), frac = m - whole;
   for (let i = 1; i <= whole + 1; i++) {
-    prev = v;
-    v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
+    prev = v; v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
   }
   return prev + (v - prev) * Math.min(frac, 1);
 }
@@ -140,25 +150,27 @@ async function loadJson(path) {
 async function refresh() {
   try {
     const [holdings, prices, history] = await Promise.all([
-      loadJson("data/holdings.json"),
-      loadJson("data/prices.json"),
-      loadJson("data/history.json"),
+      loadJson("data/holdings.json"), loadJson("data/prices.json"), loadJson("data/history.json"),
     ]);
+    let bench = null;
+    try { bench = await loadJson("data/benchmark.json"); } catch (e) { bench = null; }
+
     const plan = holdings.plan;
     const { pts: planPts, hit } = buildPlan(plan);
-    const factPts = history.map(h => ({
-      x: Math.max(0, monthsBetween(plan.start_date, h.date)), y: h.total_eur,
-    }));
+    const mB = d => Math.max(0, monthsBetween(plan.start_date, d));
+    const factPts = history.map(h => ({ x: mB(h.date), y: h.total_eur }));
+    const benchPts = (bench?.series || []).map(p => ({ x: mB(p.date), y: p.total_eur }));
 
     const total = prices.total_eur;
-    const nowM = Math.max(0, monthsBetween(plan.start_date, new Date().toISOString()));
+    const nowM = mB(new Date().toISOString());
     const planNow = planValueAt(plan, nowM);
     const delta = total - planNow;
+    const benchNow = benchPts.length ? benchPts[benchPts.length - 1].y : null;
 
-    let dayNote = prices.positions.length + " позиций";
+    let dayNote = prices.positions.length + " позиций · бонды · MMF";
     if (history.length >= 2) {
-      const d = history[history.length - 1].total_eur - history[history.length - 2].total_eur;
-      dayNote = (d >= 0 ? "+€" : "−€") + Math.abs(Math.round(d)).toLocaleString("ru-RU") + " со вчера";
+      const d = history[history.length-1].total_eur - history[history.length-2].total_eur;
+      dayNote = fmtD(d) + " со вчера";
       document.getElementById("totalnote").className = "s " + (d >= 0 ? "pos" : "neg");
     }
     document.getElementById("total").textContent = fmtEur(total);
@@ -166,12 +178,21 @@ async function refresh() {
 
     const dEl = document.getElementById("delta");
     dEl.className = "v small " + (delta >= 0 ? "pos" : "neg");
-    dEl.textContent = (delta >= 0 ? "+€" : "−€") + Math.abs(Math.round(delta)).toLocaleString("ru-RU");
-    document.getElementById("deltanote").textContent = "план на сегодня: " + fmtEur(planNow);
+    dEl.textContent = fmtD(delta);
+    document.getElementById("deltanote").textContent =
+      "план: " + fmtEur(planNow) + (hit ? " · цель " + monthLabel(plan.start_date, hit) : "");
 
-    document.getElementById("eta").textContent = hit ? monthLabel(plan.start_date, hit) : "> 25 лет";
-    document.getElementById("etanote").textContent =
-      hit ? (hit / 12).toFixed(1) + " лет · " + plan.annual_rate_pct + "% + " + fmtEur(plan.monthly) + "/мес" : "";
+    const bEl = document.getElementById("bdelta");
+    if (benchNow !== null) {
+      const bd = total - benchNow;
+      bEl.className = "v small " + (bd >= 0 ? "pos" : "neg");
+      bEl.textContent = fmtD(bd);
+      document.getElementById("bdeltanote").textContent =
+        "S&P сегодня: " + fmtEur(benchNow) + " (" + (bench.ticker || "VUAA") + ")";
+    } else {
+      bEl.textContent = "—";
+      document.getElementById("bdeltanote").textContent = "ждёт первого прогона с бенчмарком";
+    }
 
     const pct = Math.min(100, total / plan.target * 100);
     document.getElementById("fill").style.width = pct + "%";
@@ -180,10 +201,12 @@ async function refresh() {
 
     const upd = new Date(prices.updated_utc);
     document.getElementById("updated").textContent =
-      "обновлено " + upd.toLocaleString("ru-RU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      "обновлено " + upd.toLocaleString("ru-RU", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" });
     document.getElementById("fxline").textContent = prices.fx.EURUSD.toFixed(4);
 
-    drawChart(planPts, factPts, plan);
+    drawMain(planPts, benchPts, factPts, plan);
+    drawDev(history, plan, mB);
+    drawPace(history, plan);
     document.getElementById("err").style.display = "none";
   } catch (e) {
     const el = document.getElementById("err");
@@ -192,56 +215,156 @@ async function refresh() {
   }
 }
 
-function drawChart(planPts, factPts, plan) {
-  const font = cssv("--font");
+// ── главный график: план / реальный S&P / факт ──
+function drawMain(planPts, benchPts, factPts, plan) {
+  const font = FONT();
+  const yMin = Math.max(0, Math.floor(plan.start_value * 0.85 / 1000) * 1000);
   const data = { datasets: [
-    { label: "План (S&P 500, " + plan.annual_rate_pct + "%)", data: planPts,
-      borderColor: cssv("--plan"), borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
-    { label: "Факт (Lightyear)", data: factPts,
-      borderColor: cssv("--fact"), borderWidth: 2.5, pointRadius: 4,
-      pointBackgroundColor: cssv("--fact"), pointBorderColor: "#fff",
-      pointBorderWidth: 1.2, tension: 0.15 },
+    { label: "План (средняя S&P, " + plan.annual_rate_pct + "%)", data: planPts,
+      borderColor: cssv("--plan"), borderWidth: 2, borderDash: [7, 5],
+      pointRadius: 0, tension: 0.25, fill: false },
+    { label: "Реальный S&P 500", data: benchPts,
+      borderColor: cssv("--bench"), borderWidth: 2.2,
+      pointRadius: 0, tension: 0.1, fill: false },
+    { label: "Портфель", data: factPts,
+      borderColor: cssv("--fact"), borderWidth: 3,
+      pointRadius: 0, tension: 0.1, fill: "origin",
+      backgroundColor: c => {
+        const { ctx, chartArea } = c.chart;
+        if (!chartArea) return "rgba(255,127,14,0.06)";
+        const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        g.addColorStop(0, "rgba(255,127,14,0.16)");
+        g.addColorStop(1, "rgba(255,127,14,0.01)");
+        return g;
+      } },
   ]};
+  const lastF = factPts[factPts.length - 1];
   const opts = {
     responsive: true, maintainAspectRatio: false, animation: false,
     scales: {
-      x: { type: "linear", min: 0, max: planPts[planPts.length - 1].x,
-        grid: { color: cssv("--grid") }, border: { color: cssv("--axis"), width: 1.2 },
-        ticks: { color: cssv("--ink"), font: { family: font, size: 14 },
+      x: { type: "linear", min: 0, max: planPts[planPts.length-1].x,
+        grid: { color: cssv("--grid") }, border: { color: cssv("--axis") },
+        ticks: { color: cssv("--sub"), font: { family: font, size: 13 },
           stepSize: 3, callback: v => monthLabel(plan.start_date, v), maxTicksLimit: 12 } },
-      y: { min: 0, max: Math.ceil(plan.target * 1.15 / 5000) * 5000,
-        grid: { color: cssv("--grid") }, border: { color: cssv("--axis"), width: 1.2 },
-        ticks: { color: cssv("--ink"), font: { family: font, size: 14 },
-          callback: v => "€" + v / 1000 + "k" } },
+      y: { min: yMin, max: Math.ceil(plan.target * 1.12 / 5000) * 5000,
+        grid: { color: cssv("--grid") }, border: { display: false },
+        ticks: { color: cssv("--sub"), font: { family: font, size: 13 },
+          callback: v => "€" + v/1000 + "k", maxTicksLimit: 8 } },
     },
     plugins: {
       legend: { position: "top", align: "end",
-        labels: { color: cssv("--ink"), font: { family: font, size: 14 },
-          boxWidth: 26, boxHeight: 3 } },
+        labels: { color: cssv("--ink"), font: { family: font, size: 13.5 },
+          boxWidth: 24, boxHeight: 3 } },
       tooltip: { enabled: false },
     },
   };
-  if (chart) { chart.data = data; chart.options = opts; chart.update(); }
-  else chart = new Chart(document.getElementById("chart"), { type: "line", data, options: opts });
+  const markers = {
+    id: "markers",
+    afterDraw(c) {
+      const ctx = c.ctx, x = c.scales.x, y = c.scales.y;
+      // линия цели
+      const ty = y.getPixelForValue(plan.target);
+      ctx.save();
+      ctx.strokeStyle = cssv("--neg"); ctx.setLineDash([7,5]); ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.moveTo(c.chartArea.left, ty); ctx.lineTo(c.chartArea.right, ty); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = cssv("--neg"); ctx.font = "12px " + FONT();
+      ctx.fillText("цель €" + plan.target/1000 + "k", c.chartArea.right - 78, ty - 7);
+      // последняя точка факта с подписью
+      if (lastF) {
+        const px = x.getPixelForValue(lastF.x), py = y.getPixelForValue(lastF.y);
+        ctx.fillStyle = "#fff";
+        ctx.beginPath(); ctx.arc(px, py, 6.5, 0, 7); ctx.fill();
+        ctx.fillStyle = cssv("--fact");
+        ctx.beginPath(); ctx.arc(px, py, 4.5, 0, 7); ctx.fill();
+        ctx.font = "700 13px " + FONT();
+        const t = fmtEur(lastF.y);
+        const tw = ctx.measureText(t).width;
+        const tx = Math.min(px + 10, c.chartArea.right - tw - 4);
+        ctx.fillText(t, tx, py - 10);
+      }
+      ctx.restore();
+    },
+  };
+  if (chMain) { chMain.destroy(); }
+  chMain = new Chart(document.getElementById("chart"), { type:"line", data, options:opts, plugins:[markers] });
+}
 
-  if (!TARGET_PLUGIN_DONE) {
-    TARGET_PLUGIN_DONE = true;
-    Chart.register({
-      id: "targetline",
-      afterDraw(c) {
-        const y = c.scales.y.getPixelForValue(plan.target);
-        const { left, right } = c.chartArea;
-        const ctx = c.ctx;
-        ctx.save();
-        ctx.strokeStyle = cssv("--neg"); ctx.setLineDash([7, 5]); ctx.lineWidth = 1.4;
-        ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
-        ctx.fillStyle = cssv("--neg"); ctx.font = "13px " + font;
-        ctx.fillText("цель €" + plan.target / 1000 + "k", right - 84, y - 8);
-        ctx.restore();
-      },
-    });
-    chart.update();
+// ── отклонение от плана ──
+function drawDev(history, plan, mB) {
+  const font = FONT();
+  const pts = history.map(h => ({ x: mB(h.date), y: h.total_eur - planValueAt(plan, mB(h.date)) }));
+  const maxAbs = Math.max(300, ...pts.map(p => Math.abs(p.y))) * 1.25;
+  const data = { datasets: [{
+    data: pts, borderWidth: 2.4, pointRadius: 0, tension: 0.15, fill: false,
+    segment: { borderColor: c => (c.p1.parsed.y >= 0 ? cssv("--pos") : cssv("--neg")) },
+    borderColor: cssv("--pos"),
+  }]};
+  const opts = {
+    responsive: true, maintainAspectRatio: false, animation: false,
+    scales: {
+      x: { type: "linear", min: 0, max: Math.max(1, pts.length ? pts[pts.length-1].x*1.05 : 1),
+        grid: { display: false }, border: { color: cssv("--axis") },
+        ticks: { color: cssv("--sub"), font: { family: font, size: 12 },
+          callback: v => monthLabel(plan.start_date, v), maxTicksLimit: 6 } },
+      y: { min: -maxAbs, max: maxAbs,
+        grid: { color: c => (c.tick.value === 0 ? "#8A94A0" : cssv("--grid")),
+                lineWidth: c => (c.tick.value === 0 ? 1.5 : 1) },
+        border: { display: false },
+        ticks: { color: cssv("--sub"), font: { family: font, size: 12 },
+          callback: v => (v > 0 ? "+" : "") + (v/1000).toFixed(1) + "k", maxTicksLimit: 5 } },
+    },
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+  };
+  if (chDev) chDev.destroy();
+  chDev = new Chart(document.getElementById("devchart"), { type:"line", data, options:opts });
+}
+
+// ── месячный темп ──
+function drawPace(history, plan) {
+  const font = FONT();
+  if (!history.length) return;
+  // последняя точка каждого календарного месяца
+  const byMonth = new Map();
+  for (const h of history) byMonth.set(h.date.slice(0, 7), h.total_eur);
+  const keys = [...byMonth.keys()].sort();
+  const labels = [], got = [], need = [];
+  const start = new Date(plan.start_date);
+  let prevV = plan.start_value, prevM = 0;
+  for (const k of keys) {
+    const [y, mo] = k.split("-").map(Number);
+    const endOfMonth = new Date(y, mo, 0);
+    const mEnd = Math.max(0, (endOfMonth - start) / (1000*60*60*24*30.44));
+    const lastInMonth = byMonth.get(k);
+    const lastDate = history.filter(h => h.date.startsWith(k)).pop().date;
+    const mLast = Math.max(0, (new Date(lastDate) - start) / (1000*60*60*24*30.44));
+    labels.push(MONTHS_RU[mo-1] + " " + String(y).slice(2));
+    got.push(lastInMonth - prevV);
+    need.push(planValueAt(plan, Math.min(mEnd, mLast)) - planValueAt(plan, prevM));
+    prevV = lastInMonth; prevM = Math.min(mEnd, mLast);
   }
+  const data = { labels, datasets: [
+    { type: "bar", data: got, borderRadius: 4, maxBarThickness: 46,
+      backgroundColor: got.map((g, i) => (g >= need[i] ? "rgba(31,157,85,.75)" : "rgba(214,69,69,.75)")) },
+    { type: "line", data: need, showLine: false, pointStyle: "line",
+      pointRadius: 26, pointBorderWidth: 3, borderColor: cssv("--plan"),
+      pointBorderColor: cssv("--plan") },
+  ]};
+  const lim = Math.max(1500, ...got.map(Math.abs), ...need) * 1.25;
+  const opts = {
+    responsive: true, maintainAspectRatio: false, animation: false,
+    scales: {
+      x: { grid: { display: false }, border: { color: cssv("--axis") },
+        ticks: { color: cssv("--sub"), font: { family: font, size: 12 } } },
+      y: { min: Math.min(0, ...got) < 0 ? -lim : 0, max: lim,
+        grid: { color: cssv("--grid") }, border: { display: false },
+        ticks: { color: cssv("--sub"), font: { family: font, size: 12 },
+          callback: v => (v/1000).toFixed(1) + "k", maxTicksLimit: 5 } },
+    },
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+  };
+  if (chPace) chPace.destroy();
+  chPace = new Chart(document.getElementById("pacechart"), { data, options: opts });
 }
 
 function boot(){ if (window.Chart) refresh(); else setTimeout(boot, 150); }
