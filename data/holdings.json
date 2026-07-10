@@ -1,20 +1,21 @@
 {
   "plan": {
     "start_date": "2026-07-09",
-    "start_value": 15824.72,
+    "start_value": 15800,
     "monthly": 1000,
     "annual_rate_pct": 10.0,
     "target": 50000,
-    "comment": "10% = долгосрочная средняя S&P 500 с дивидендами, номинал. start_value поправь по факту."
+    "comment": "Старт по выписке Lightyear 09/07/2026. 10% = долгосрочная средняя S&P 500. Взносы €1000 каждое 10-е."
   },
   "positions": [
-    { "symbol": "BNP",  "yahoo": "BNP.PA", "qty": 31.0,        "name": "BNP Paribas" },
-    { "symbol": "PUB",  "yahoo": "PUB.PA", "qty": 12.0,        "name": "Publicis Groupe" },
-    { "symbol": "MSFT", "yahoo": "MSFT",   "qty": 4.138681192, "name": "Microsoft" },
-    { "symbol": "AZN",  "yahoo": "AZN.L",  "qty": 6.0,         "name": "AstraZeneca" },
-    { "symbol": "TM",   "yahoo": "TM",     "qty": 3.0,         "name": "Toyota (ADR)" },
-    { "symbol": "NFLX", "yahoo": "NFLX",   "qty": 5.80741023,  "name": "Netflix" },
-    { "symbol": "MC",   "yahoo": "MC.PA",  "qty": 1.0,         "name": "LVMH" }
+    { "symbol": "BNP",  "yahoo": "BNP.PA",  "qty": 31.0,        "name": "BNP Paribas" },
+    { "symbol": "MSFT", "yahoo": "MSFT",    "qty": 4.138681192, "name": "Microsoft" },
+    { "symbol": "VWCE", "yahoo": "VWCE.DE", "qty": 6.890848952, "name": "Vanguard FTSE All-World" },
+    { "symbol": "PUB",  "yahoo": "PUB.PA",  "qty": 12.0,        "name": "Publicis Groupe" },
+    { "symbol": "AZN",  "yahoo": "AZN.L",   "qty": 6.0,         "name": "AstraZeneca" },
+    { "symbol": "MC",   "yahoo": "MC.PA",   "qty": 1.0,         "name": "LVMH" },
+    { "symbol": "TM",   "yahoo": "TM",      "qty": 3.0,         "name": "Toyota (ADR)" },
+    { "symbol": "NFLX", "yahoo": "NFLX",    "qty": 5.80741023,  "name": "Netflix" }
   ],
   "bonds": [
     {
@@ -35,7 +36,7 @@
     }
   ],
   "cash": {
-    "mmf_eur": 3289.57,
-    "note": "BlackRock ICS EUR MMF + свободный кэш. Обновляется парсером выписки или руками."
+    "mmf_eur": 3987.67,
+    "note": "MMF EUR 3155.94 + MMF USD 3.18 + cash USD 698.11 + cash EUR 130.44, по выписке 09/07/2026"
   }
 }
