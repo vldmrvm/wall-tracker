@@ -95,6 +95,9 @@
   <div class="card main">
     <div id="err"></div>
     <div class="cbox"><canvas id="chart"></canvas></div>
+    <div style="height:5.5vh;position:relative;margin-top:.5vh">
+      <canvas id="minimap" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+    </div>
   </div>
 
   <div class="row">
@@ -103,7 +106,7 @@
       <div class="cbox"><canvas id="devchart"></canvas></div>
     </div>
     <div class="card">
-      <div class="ct">Месячный темп</div>
+      <div class="ct">Месячный темп <span style="font-weight:400;color:var(--sub)">· риска — нужный темп до цели</span></div>
       <div class="cbox"><canvas id="pacechart"></canvas></div>
     </div>
   </div>
@@ -123,23 +126,39 @@ function monthLabel(startDate, m) {
 }
 const monthsBetween = (a, b) => (new Date(b) - new Date(a)) / (1000*60*60*24*30.44);
 
-function buildPlan(plan) {
-  const pts = [{ x: 0, y: plan.start_value }];
+// Дневной движок плана: рост каждый день, взнос скачком 10-го числа —
+// синхронно с бенчмарком, чтобы 10-е не выглядело отставанием.
+const DPM = 30.4375;
+let _eng = null, _engKey = "";
+function engine(plan) {
+  const key = JSON.stringify(plan);
+  if (_engKey === key && _eng) return _eng;
+  const daily = Math.pow(1 + plan.annual_rate_pct / 100, 1 / 365.25);
+  const vals = [plan.start_value];
+  const d = new Date(plan.start_date);
   let v = plan.start_value, hit = null;
-  for (let m = 1; m <= 300; m++) {
-    v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
-    pts.push({ x: m, y: v });
-    if (hit === null && v >= plan.target) { hit = m; break; }
+  for (let i = 1; i <= 9200; i++) {
+    d.setDate(d.getDate() + 1);
+    v *= daily;
+    if (d.getDate() === 10) v += plan.monthly;
+    vals.push(v);
+    if (hit === null && v >= plan.target) hit = i;
+    if (hit !== null && i > hit + 90) break;
   }
-  return { pts, hit };
+  _eng = { vals, hit }; _engKey = key;
+  return _eng;
+}
+function buildPlan(plan) {
+  const e = engine(plan);
+  const pts = [];
+  for (let i = 0; i < e.vals.length; i += 7) pts.push({ x: i / DPM, y: e.vals[i] });
+  pts.push({ x: (e.vals.length - 1) / DPM, y: e.vals[e.vals.length - 1] });
+  return { pts, hit: e.hit !== null ? e.hit / DPM : null };
 }
 function planValueAt(plan, m) {
-  let v = plan.start_value, prev = v;
-  const whole = Math.floor(m), frac = m - whole;
-  for (let i = 1; i <= whole + 1; i++) {
-    prev = v; v = v * (1 + plan.annual_rate_pct / 1200) + plan.monthly;
-  }
-  return prev + (v - prev) * Math.min(frac, 1);
+  const e = engine(plan);
+  const i = Math.max(0, Math.min(Math.round(m * DPM), e.vals.length - 1));
+  return e.vals[i];
 }
 async function loadJson(path) {
   const r = await fetch(path + "?ts=" + Date.now(), { cache: "no-store" });
@@ -204,7 +223,7 @@ async function refresh() {
       "обновлено " + upd.toLocaleString("ru-RU", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" });
     document.getElementById("fxline").textContent = prices.fx.EURUSD.toFixed(4);
 
-    drawMain(planPts, benchPts, factPts, plan);
+    drawMain(planPts, benchPts, factPts, plan, nowM);
     drawDev(history, plan, mB);
     drawPace(history, plan);
     document.getElementById("err").style.display = "none";
@@ -216,17 +235,24 @@ async function refresh() {
 }
 
 // ── главный график: план / реальный S&P / факт ──
-function drawMain(planPts, benchPts, factPts, plan) {
+function drawMain(planPts, benchPts, factPts, plan, nowM) {
   const font = FONT();
-  const yMin = Math.max(0, Math.floor(plan.start_value * 0.85 / 1000) * 1000);
+  const hitX = planPts[planPts.length - 1].x;
+  const xMax = Math.min(hitX, Math.max(4, nowM + 6));   // окно: прожитое + 6 мес
+  const inWin = a => a.filter(p => p.x <= xMax + 0.05);
+  const wPlan = inWin(planPts), wBench = inWin(benchPts), wFact = inWin(factPts);
+  const highs = [...wPlan, ...wBench, ...wFact].map(p => p.y);
+  const lows  = [...wFact, ...wBench].map(p => p.y);
+  const yTop = Math.max(...highs) * 1.06;
+  const yMin = Math.max(0, Math.floor(Math.min(plan.start_value, ...(lows.length ? lows : [plan.start_value])) * 0.97 / 500) * 500);
   const data = { datasets: [
-    { label: "План (средняя S&P, " + plan.annual_rate_pct + "%)", data: planPts,
+    { label: "План (средняя S&P, " + plan.annual_rate_pct + "%)", data: wPlan,
       borderColor: cssv("--plan"), borderWidth: 2, borderDash: [7, 5],
       pointRadius: 0, tension: 0.25, fill: false },
-    { label: "Реальный S&P 500", data: benchPts,
+    { label: "Реальный S&P 500", data: wBench,
       borderColor: cssv("--bench"), borderWidth: 2.2,
       pointRadius: 0, tension: 0.1, fill: false },
-    { label: "Портфель", data: factPts,
+    { label: "Портфель", data: wFact,
       borderColor: cssv("--fact"), borderWidth: 3,
       pointRadius: 0, tension: 0.1, fill: "origin",
       backgroundColor: c => {
@@ -242,11 +268,11 @@ function drawMain(planPts, benchPts, factPts, plan) {
   const opts = {
     responsive: true, maintainAspectRatio: false, animation: false,
     scales: {
-      x: { type: "linear", min: 0, max: planPts[planPts.length-1].x,
+      x: { type: "linear", min: 0, max: xMax,
         grid: { color: cssv("--grid") }, border: { color: cssv("--axis") },
         ticks: { color: cssv("--sub"), font: { family: font, size: 13 },
-          stepSize: 3, callback: v => monthLabel(plan.start_date, v), maxTicksLimit: 12 } },
-      y: { min: yMin, max: Math.ceil(plan.target * 1.12 / 5000) * 5000,
+          stepSize: 1, callback: v => monthLabel(plan.start_date, v), maxTicksLimit: 10 } },
+      y: { min: yMin, max: yTop,
         grid: { color: cssv("--grid") }, border: { display: false },
         ticks: { color: cssv("--sub"), font: { family: font, size: 13 },
           callback: v => "€" + v/1000 + "k", maxTicksLimit: 8 } },
@@ -265,11 +291,13 @@ function drawMain(planPts, benchPts, factPts, plan) {
       // линия цели
       const ty = y.getPixelForValue(plan.target);
       ctx.save();
-      ctx.strokeStyle = cssv("--neg"); ctx.setLineDash([7,5]); ctx.lineWidth = 1.3;
-      ctx.beginPath(); ctx.moveTo(c.chartArea.left, ty); ctx.lineTo(c.chartArea.right, ty); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = cssv("--neg"); ctx.font = "12px " + FONT();
-      ctx.fillText("цель €" + plan.target/1000 + "k", c.chartArea.right - 78, ty - 7);
+      if (ty > c.chartArea.top) {
+        ctx.strokeStyle = cssv("--neg"); ctx.setLineDash([7,5]); ctx.lineWidth = 1.3;
+        ctx.beginPath(); ctx.moveTo(c.chartArea.left, ty); ctx.lineTo(c.chartArea.right, ty); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = cssv("--neg"); ctx.font = "12px " + FONT();
+        ctx.fillText("цель €" + plan.target/1000 + "k", c.chartArea.right - 78, ty - 7);
+      }
       // последняя точка факта с подписью
       if (lastF) {
         const px = x.getPixelForValue(lastF.x), py = y.getPixelForValue(lastF.y);
@@ -288,6 +316,52 @@ function drawMain(planPts, benchPts, factPts, plan) {
   };
   if (chMain) { chMain.destroy(); }
   chMain = new Chart(document.getElementById("chart"), { type:"line", data, options:opts, plugins:[markers] });
+  drawMini(planPts, factPts, plan, xMax, hitX);
+}
+
+// мини-карта всего пути: план целиком, окно подсвечено, точка — ты здесь
+function drawMini(planPts, factPts, plan, xMax, hitX) {
+  const cv = document.getElementById("minimap");
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const ctx = cv.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const pad = 6;
+  const sx = x => pad + x / hitX * (w - 2 * pad);
+  const yMax = plan.target * 1.05, yMin0 = plan.start_value * 0.9;
+  const sy = v => h - pad - (v - yMin0) / (yMax - yMin0) * (h - 2 * pad);
+  // фон и рамка
+  ctx.fillStyle = "#FAFBFC"; ctx.strokeStyle = cssv("--frame");
+  ctx.beginPath(); ctx.roundRect(0.5, 0.5, w - 1, h - 1, 6); ctx.fill(); ctx.stroke();
+  // окно
+  ctx.fillStyle = "rgba(31,119,180,0.10)";
+  ctx.fillRect(sx(0), 1, sx(xMax) - sx(0), h - 2);
+  // цель
+  ctx.strokeStyle = cssv("--neg"); ctx.setLineDash([4, 3]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad, sy(plan.target)); ctx.lineTo(w - pad, sy(plan.target)); ctx.stroke();
+  ctx.setLineDash([]);
+  // план
+  ctx.strokeStyle = cssv("--plan"); ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  planPts.forEach((p, i) => { const X = sx(p.x), Y = sy(p.y); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+  ctx.stroke();
+  // факт + текущая точка
+  if (factPts.length) {
+    ctx.strokeStyle = cssv("--fact"); ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    factPts.forEach((p, i) => { const X = sx(p.x), Y = sy(p.y); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+    ctx.stroke();
+    const last = factPts[factPts.length - 1];
+    ctx.fillStyle = cssv("--fact");
+    ctx.beginPath(); ctx.arc(sx(last.x), sy(last.y), 3, 0, 7); ctx.fill();
+  }
+  // подпись финиша
+  ctx.fillStyle = cssv("--sub"); ctx.font = "10px " + FONT();
+  ctx.textAlign = "right";
+  ctx.fillText("финиш " + monthLabel(plan.start_date, hitX), w - 8, 12);
+  ctx.textAlign = "left";
 }
 
 // ── отклонение от плана ──
@@ -320,28 +394,41 @@ function drawDev(history, plan, mB) {
   chDev = new Chart(document.getElementById("devchart"), { type:"line", data, options:opts });
 }
 
-// ── месячный темп ──
+// ── месячный темп (динамичный): риска = сколько нужно в месяц отсюда до цели ──
 function drawPace(history, plan) {
   const font = FONT();
   if (!history.length) return;
+  const e = engine(plan);
+  // дедлайн — дата достижения цели по плану
+  const deadline = new Date(plan.start_date);
+  deadline.setDate(deadline.getDate() + (e.hit ?? 9000));
   // последняя точка каждого календарного месяца
   const byMonth = new Map();
   for (const h of history) byMonth.set(h.date.slice(0, 7), h.total_eur);
   const keys = [...byMonth.keys()].sort();
   const labels = [], got = [], need = [];
-  const start = new Date(plan.start_date);
-  let prevV = plan.start_value, prevM = 0;
+  let prevV = plan.start_value;
+  let prevEnd = new Date(plan.start_date);
+  const today = new Date();
   for (const k of keys) {
     const [y, mo] = k.split("-").map(Number);
     const endOfMonth = new Date(y, mo, 0);
-    const mEnd = Math.max(0, (endOfMonth - start) / (1000*60*60*24*30.44));
     const lastInMonth = byMonth.get(k);
-    const lastDate = history.filter(h => h.date.startsWith(k)).pop().date;
-    const mLast = Math.max(0, (new Date(lastDate) - start) / (1000*60*60*24*30.44));
     labels.push(MONTHS_RU[mo-1] + " " + String(y).slice(2));
     got.push(lastInMonth - prevV);
-    need.push(planValueAt(plan, Math.min(mEnd, mLast)) - planValueAt(plan, prevM));
-    prevV = lastInMonth; prevM = Math.min(mEnd, mLast);
+    // динамичная норма: (цель − портфель на входе в месяц) / месяцев до дедлайна
+    const monthsLeft = Math.max(1, (deadline - prevEnd) / (1000*60*60*24*30.4375));
+    let n = Math.max(0, (plan.target - prevV) / monthsLeft);
+    // текущий незакрытый месяц: норма пропорциональна прожитым дням
+    const isCurrent = today.getFullYear() === y && today.getMonth() + 1 === mo;
+    if (isCurrent) {
+      const daysIn = endOfMonth.getDate();
+      const from = Math.max(1, prevEnd.getFullYear() === y && prevEnd.getMonth()+1 === mo ? prevEnd.getDate() : 1);
+      n *= Math.min(1, Math.max(0.05, (today.getDate() - from + 1) / daysIn));
+    }
+    need.push(n);
+    prevV = lastInMonth;
+    prevEnd = endOfMonth < today ? endOfMonth : today;
   }
   const data = { labels, datasets: [
     { type: "bar", data: got, borderRadius: 4, maxBarThickness: 46,
