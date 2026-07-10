@@ -73,6 +73,47 @@ def bond_value(bond: dict, today: date) -> float:
     return nominal + accrued
 
 
+# ── бенчмарк: те же деньги в S&P 500 (VUAA, EUR, аккумулирующий) ───────
+BENCH_TICKER = "VUAA.DE"
+
+def build_benchmark(plan: dict) -> list[dict]:
+    """Симуляция: start_value вложен в S&P 500 ETF на дату старта,
+    каждое 10-е число докупка на plan.monthly по цене первого торгового дня >= 10."""
+    import yfinance as yf
+    from datetime import date as _date
+
+    start = _date.fromisoformat(plan["start_date"])
+    try:
+        h = yf.Ticker(BENCH_TICKER).history(start=start.isoformat())
+    except Exception as e:  # noqa: BLE001
+        print(f"WARN: benchmark {BENCH_TICKER}: {e}", file=sys.stderr)
+        return []
+    if h is None or not len(h):
+        print(f"WARN: нет данных бенчмарка {BENCH_TICKER}", file=sys.stderr)
+        return []
+
+    monthly = float(plan.get("monthly", 0))
+    units = 0.0
+    contributed_months: set[tuple[int, int]] = set()
+    if start.day >= 10:  # десятое число стартового месяца уже позади
+        contributed_months.add((start.year, start.month))
+
+    series = []
+    first = True
+    for ts, row in h.iterrows():
+        d = ts.date()
+        price = float(row["Close"])
+        if first:
+            units = float(plan["start_value"]) / price
+            first = False
+        key = (d.year, d.month)
+        if d.day >= 10 and key not in contributed_months and d > start:
+            units += monthly / price
+            contributed_months.add(key)
+        series.append({"date": d.isoformat(), "total_eur": round(units * price, 2)})
+    return series
+
+
 # ── main ───────────────────────────────────────────────────────────────
 def main() -> None:
     holdings = json.loads(HOLDINGS_F.read_text(encoding="utf-8"))
@@ -148,6 +189,11 @@ def main() -> None:
     history.append({"date": today_s, "total_eur": round(total, 2)})
     history.sort(key=lambda h: h["date"])
     HISTORY_F.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    bench = build_benchmark(holdings["plan"])
+    (DATA / "benchmark.json").write_text(
+        json.dumps({"ticker": BENCH_TICKER, "updated_utc": prices["updated_utc"],
+                    "series": bench}, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"OK: total €{total:,.0f} ({len(rows)} акций, {len(bond_rows)} бондов, кэш €{cash:,.0f})")
     if stale:
