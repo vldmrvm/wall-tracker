@@ -1,8 +1,8 @@
 {
-  "updated_utc": "2026-07-10T12:35:52Z",
+  "updated_utc": "2026-07-10T12:36:42Z",
   "fx": {
-    "EURUSD": 1.14299,
-    "GBPEUR": 1.1738
+    "EURUSD": 1.14286,
+    "GBPEUR": 1.1739
   },
   "positions": [
     {
@@ -17,16 +17,16 @@
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 336.28,
-      "value_eur": 1391.74,
+      "price_eur": 336.31,
+      "value_eur": 1391.9,
       "stale": false
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 6.890848952,
-      "price_eur": 165.96,
-      "value_eur": 1143.61,
+      "price_eur": 165.98,
+      "value_eur": 1143.74,
       "stale": false
     },
     {
@@ -41,32 +41,32 @@
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 154.19,
-      "value_eur": 925.14,
+      "price_eur": 154.11,
+      "value_eur": 924.66,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 492.9,
-      "value_eur": 492.9,
+      "price_eur": 493.05,
+      "value_eur": 493.05,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 152.51,
-      "value_eur": 457.54,
+      "price_eur": 152.53,
+      "value_eur": 457.59,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 66.03,
-      "value_eur": 383.46,
+      "price_eur": 66.04,
+      "value_eur": 383.5,
       "stale": false
     }
   ],
@@ -81,6 +81,6 @@
     }
   ],
   "cash_eur": 3987.67,
-  "total_eur": 15761.61,
+  "total_eur": 15761.67,
   "stale_symbols": []
 }
