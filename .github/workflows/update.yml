@@ -2,6 +2,7 @@ name: update-prices
 
 on:
   schedule:
+    # каждый час 09:15–18:15 по Таллину (06–15 UTC летом), пн–пт
     - cron: "15 6-15 * * 1-5"
   workflow_dispatch: {}
 
@@ -28,6 +29,6 @@ jobs:
         run: |
           git config user.name "wall-bot"
           git config user.email "wall-bot@users.noreply.github.com"
-          git add data/prices.json data/history.json
+          git add data/prices.json data/history.json data/benchmark.json
           git diff --cached --quiet || git commit -m "prices $(date -u +'%Y-%m-%d %H:%M')"
           git push
