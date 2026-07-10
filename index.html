@@ -125,6 +125,16 @@ function monthLabel(startDate, m) {
   return MONTHS_RU[d.getMonth()] + " " + String(d.getFullYear()).slice(2);
 }
 const monthsBetween = (a, b) => (new Date(b) - new Date(a)) / (1000*60*60*24*30.44);
+// подпись точки оси X: месяцы -> "10 июл" на коротких диапазонах, "июл 26" на длинных
+function xLabel(startDate, m, span) {
+  const d = new Date(startDate);
+  if (span < 2.5) {
+    d.setDate(d.getDate() + Math.round(m * 30.4375));
+    return d.getDate() + " " + MONTHS_RU[d.getMonth()];
+  }
+  d.setMonth(d.getMonth() + Math.round(m));
+  return MONTHS_RU[d.getMonth()] + " " + String(d.getFullYear()).slice(2);
+}
 
 // Дневной движок плана: рост каждый день, взнос скачком 10-го числа —
 // синхронно с бенчмарком, чтобы 10-е не выглядело отставанием.
@@ -243,7 +253,7 @@ function drawMain(planPts, benchPts, factPts, plan, nowM) {
   const wPlan = inWin(planPts), wBench = inWin(benchPts), wFact = inWin(factPts);
   const highs = [...wPlan, ...wBench, ...wFact].map(p => p.y);
   const lows  = [...wFact, ...wBench].map(p => p.y);
-  const yTop = Math.max(...highs) * 1.06;
+  const yTop = Math.ceil(Math.max(...highs) * 1.06 / 250) * 250;
   const yMin = Math.max(0, Math.floor(Math.min(plan.start_value, ...(lows.length ? lows : [plan.start_value])) * 0.97 / 500) * 500);
   const data = { datasets: [
     { label: "План (средняя S&P, " + plan.annual_rate_pct + "%)", data: wPlan,
@@ -369,18 +379,22 @@ function drawDev(history, plan, mB) {
   const font = FONT();
   const pts = history.map(h => ({ x: mB(h.date), y: h.total_eur - planValueAt(plan, mB(h.date)) }));
   const maxAbs = Math.max(300, ...pts.map(p => Math.abs(p.y))) * 1.25;
+  const spanX = Math.max(0.35, pts.length ? pts[pts.length-1].x * 1.1 : 0.35);
   const data = { datasets: [{
-    data: pts, borderWidth: 2.4, pointRadius: 0, tension: 0.15, fill: false,
+    data: pts, borderWidth: 2.4, tension: 0.15, fill: false, spanGaps: true,
+    pointRadius: pts.length < 25 ? 3 : 0,
+    pointBackgroundColor: c => (c.parsed && c.parsed.y >= 0 ? cssv("--pos") : cssv("--neg")),
+    pointBorderColor: "#fff", pointBorderWidth: 1,
     segment: { borderColor: c => (c.p1.parsed.y >= 0 ? cssv("--pos") : cssv("--neg")) },
     borderColor: cssv("--pos"),
   }]};
   const opts = {
     responsive: true, maintainAspectRatio: false, animation: false,
     scales: {
-      x: { type: "linear", min: 0, max: Math.max(1, pts.length ? pts[pts.length-1].x*1.05 : 1),
+      x: { type: "linear", min: -spanX*0.03, max: spanX,
         grid: { display: false }, border: { color: cssv("--axis") },
         ticks: { color: cssv("--sub"), font: { family: font, size: 12 },
-          callback: v => monthLabel(plan.start_date, v), maxTicksLimit: 6 } },
+          callback: v => xLabel(plan.start_date, v, spanX), maxTicksLimit: 6 } },
       y: { min: -maxAbs, max: maxAbs,
         grid: { color: c => (c.tick.value === 0 ? "#8A94A0" : cssv("--grid")),
                 lineWidth: c => (c.tick.value === 0 ? 1.5 : 1) },
@@ -430,9 +444,14 @@ function drawPace(history, plan) {
     prevV = lastInMonth;
     prevEnd = endOfMonth < today ? endOfMonth : today;
   }
+  const ptsInMonth = keys.map(k => history.filter(h => h.date.startsWith(k)).length);
   const data = { labels, datasets: [
     { type: "bar", data: got, borderRadius: 4, maxBarThickness: 46,
-      backgroundColor: got.map((g, i) => (g >= need[i] ? "rgba(31,157,85,.75)" : "rgba(214,69,69,.75)")) },
+      backgroundColor: got.map((g, i) => {
+        const isLast = i === got.length - 1;
+        if (isLast && ptsInMonth[i] < 5) return "rgba(107,118,131,.45)"; // рано судить
+        return g >= need[i] ? "rgba(31,157,85,.75)" : "rgba(214,69,69,.75)";
+      }) },
     { type: "line", data: need, showLine: false, pointStyle: "line",
       pointRadius: 26, pointBorderWidth: 3, borderColor: cssv("--plan"),
       pointBorderColor: cssv("--plan") },
