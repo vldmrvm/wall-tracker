@@ -1,86 +1,86 @@
 {
-  "updated_utc": "2026-07-13T15:51:14Z",
+  "updated_utc": "2026-07-14T08:26:45Z",
   "fx": {
     "EURUSD": 1.14012,
-    "GBPEUR": 1.1731
+    "GBPEUR": 1.1715
   },
   "positions": [
     {
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 100.92,
-      "value_eur": 3128.52,
+      "price_eur": 100.26,
+      "value_eur": 3108.06,
       "stale": false
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 342.95,
-      "value_eur": 1419.38,
+      "price_eur": 342.94,
+      "value_eur": 1419.31,
       "stale": false
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 6.890848952,
-      "price_eur": 165.78,
-      "value_eur": 1142.36,
+      "price_eur": 164.98,
+      "value_eur": 1136.85,
       "stale": false
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 87.86,
-      "value_eur": 1054.32,
+      "price_eur": 86.86,
+      "value_eur": 1042.32,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 147.93,
-      "value_eur": 887.57,
+      "price_eur": 145.9,
+      "value_eur": 875.39,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 491.5,
-      "value_eur": 491.5,
+      "price_eur": 478.0,
+      "value_eur": 478.0,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 153.57,
-      "value_eur": 460.71,
+      "price_eur": 153.27,
+      "value_eur": 459.82,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 65.46,
-      "value_eur": 380.14,
+      "price_eur": 64.76,
+      "value_eur": 376.07,
       "stale": false
     }
   ],
   "bonds": [
     {
       "name": "LHV Group 6% суборд 2034",
-      "value_eur": 2019.4
+      "value_eur": 2019.73
     },
     {
       "name": "Eesti Energia 5%",
-      "value_eur": 804.27
+      "value_eur": 804.38
     }
   ],
   "cash_eur": 3987.67,
-  "total_eur": 15775.85,
+  "total_eur": 15707.6,
   "stale_symbols": []
 }
