@@ -8,14 +8,14 @@
     "comment": "Старт по выписке Lightyear 09/07/2026. 10% = долгосрочная средняя S&P 500. Взносы €1000 каждое 10-е."
   },
   "positions": [
-    { "symbol": "BNP",  "yahoo": "BNP.PA",  "qty": 31.0,        "name": "BNP Paribas" },
-    { "symbol": "MSFT", "yahoo": "MSFT",    "qty": 4.138681192, "name": "Microsoft" },
-    { "symbol": "VWCE", "yahoo": "VWCE.DE", "qty": 6.890848952, "name": "Vanguard FTSE All-World" },
-    { "symbol": "PUB",  "yahoo": "PUB.PA",  "qty": 12.0,        "name": "Publicis Groupe" },
-    { "symbol": "AZN",  "yahoo": "AZN.L",   "qty": 6.0,         "name": "AstraZeneca" },
-    { "symbol": "MC",   "yahoo": "MC.PA",   "qty": 1.0,         "name": "LVMH" },
-    { "symbol": "TM",   "yahoo": "TM",      "qty": 3.0,         "name": "Toyota (ADR)" },
-    { "symbol": "NFLX", "yahoo": "NFLX",    "qty": 5.80741023,  "name": "Netflix" }
+    { "symbol": "BNP",  "yahoo": "BNP.PA",  "qty": 31.0,         "name": "BNP Paribas" },
+    { "symbol": "MSFT", "yahoo": "MSFT",    "qty": 4.138681192,  "name": "Microsoft" },
+    { "symbol": "VWCE", "yahoo": "VWCE.DE", "qty": 17.944709933, "name": "Vanguard FTSE All-World" },
+    { "symbol": "PUB",  "yahoo": "PUB.PA",  "qty": 12.0,         "name": "Publicis Groupe" },
+    { "symbol": "AZN",  "yahoo": "AZN.L",   "qty": 6.0,          "name": "AstraZeneca" },
+    { "symbol": "MC",   "yahoo": "MC.PA",   "qty": 1.0,          "name": "LVMH" },
+    { "symbol": "TM",   "yahoo": "TM",      "qty": 3.0,          "name": "Toyota (ADR)" },
+    { "symbol": "NFLX", "yahoo": "NFLX",    "qty": 5.80741023,   "name": "Netflix" }
   ],
   "bonds": [
     {
@@ -36,7 +36,7 @@
     }
   ],
   "cash": {
-    "mmf_eur": 3987.67,
-    "note": "MMF EUR 3155.94 + MMF USD 3.18 + cash USD 698.11 + cash EUR 130.44, по выписке 09/07/2026"
+    "mmf_eur": 4659.12,
+    "note": "MMF EUR 3155.94 + MMF USD 3.64 ($→€ по 0.87183) + cash USD 0.01 + cash EUR 0.00, по выписке 15/07/2026"
   }
 }
