@@ -1,24 +1,24 @@
 {
-  "updated_utc": "2026-07-22T14:20:04Z",
+  "updated_utc": "2026-07-22T16:42:56Z",
   "fx": {
-    "EURUSD": 1.14207,
-    "GBPEUR": 1.1723
+    "EURUSD": 1.14116,
+    "GBPEUR": 1.1714
   },
   "positions": [
     {
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 107.0,
-      "value_eur": 3317.0,
+      "price_eur": 106.78,
+      "value_eur": 3310.18,
       "stale": false
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 341.66,
-      "value_eur": 1414.02,
+      "price_eur": 340.57,
+      "value_eur": 1409.53,
       "stale": false
     },
     {
@@ -33,40 +33,40 @@
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 86.84,
-      "value_eur": 1042.08,
+      "price_eur": 86.62,
+      "value_eur": 1039.44,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 148.88,
-      "value_eur": 893.29,
+      "price_eur": 148.79,
+      "value_eur": 892.75,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 477.2,
-      "value_eur": 477.2,
+      "price_eur": 474.0,
+      "value_eur": 474.0,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 158.2,
-      "value_eur": 474.6,
+      "price_eur": 158.06,
+      "value_eur": 474.17,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 61.54,
-      "value_eur": 357.4,
+      "price_eur": 61.49,
+      "value_eur": 357.12,
       "stale": false
     }
   ],
@@ -81,6 +81,6 @@
     }
   ],
   "cash_eur": 4659.12,
-  "total_eur": 18430.38,
+  "total_eur": 18411.98,
   "stale_symbols": []
 }
