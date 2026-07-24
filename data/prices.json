@@ -1,7 +1,7 @@
 {
-  "updated_utc": "2026-07-24T15:05:17Z",
+  "updated_utc": "2026-07-24T16:56:04Z",
   "fx": {
-    "EURUSD": 1.13804,
+    "EURUSD": 1.1383,
     "GBPEUR": 1.1712
   },
   "positions": [
@@ -9,64 +9,64 @@
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 105.2,
-      "value_eur": 3261.2,
+      "price_eur": 105.92,
+      "value_eur": 3283.52,
       "stale": false
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 336.58,
-      "value_eur": 1392.99,
+      "price_eur": 337.55,
+      "value_eur": 1397.01,
       "stale": false
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 17.944709933,
-      "price_eur": 163.62,
-      "value_eur": 2936.11,
+      "price_eur": 164.28,
+      "value_eur": 2947.96,
       "stale": false
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 87.76,
-      "value_eur": 1053.12,
+      "price_eur": 88.42,
+      "value_eur": 1061.04,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 148.95,
-      "value_eur": 893.72,
+      "price_eur": 148.39,
+      "value_eur": 890.35,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 456.55,
-      "value_eur": 456.55,
+      "price_eur": 461.7,
+      "value_eur": 461.7,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 155.81,
-      "value_eur": 467.43,
+      "price_eur": 156.21,
+      "value_eur": 468.63,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 60.82,
-      "value_eur": 353.23,
+      "price_eur": 61.61,
+      "value_eur": 357.82,
       "stale": false
     }
   ],
@@ -81,6 +81,6 @@
     }
   ],
   "cash_eur": 4659.12,
-  "total_eur": 18301.96,
+  "total_eur": 18355.64,
   "stale_symbols": []
 }
