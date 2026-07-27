@@ -11,6 +11,7 @@
     { "symbol": "BNP",  "yahoo": "BNP.PA",  "qty": 31.0,         "name": "BNP Paribas" },
     { "symbol": "MSFT", "yahoo": "MSFT",    "qty": 4.138681192,  "name": "Microsoft" },
     { "symbol": "VWCE", "yahoo": "VWCE.DE", "qty": 17.944709933, "name": "Vanguard FTSE All-World" },
+    { "symbol": "SEC0", "yahoo": "SEC0.DE", "qty": 88.841625207, "name": "iShares MSCI Global Semiconductors" },
     { "symbol": "PUB",  "yahoo": "PUB.PA",  "qty": 12.0,         "name": "Publicis Groupe" },
     { "symbol": "AZN",  "yahoo": "AZN.L",   "qty": 6.0,          "name": "AstraZeneca" },
     { "symbol": "MC",   "yahoo": "MC.PA",   "qty": 1.0,          "name": "LVMH" },
@@ -36,7 +37,7 @@
     }
   ],
   "cash": {
-    "mmf_eur": 4659.12,
-    "note": "MMF EUR 3155.94 + MMF USD 3.64 ($→€ по 0.87183) + cash USD 0.01 + cash EUR 0.00, по выписке 15/07/2026"
+    "mmf_eur": 3159.14,
+    "note": "MMF EUR 3155.94 + MMF USD 3.64 ($→€ по 0.87757) + cash USD 0.01, по выписке 26/07/2026"
   }
 }
