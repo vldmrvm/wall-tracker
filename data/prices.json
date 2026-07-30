@@ -1,80 +1,80 @@
 {
-  "updated_utc": "2026-07-30T11:20:07Z",
+  "updated_utc": "2026-07-30T14:29:18Z",
   "fx": {
-    "EURUSD": 1.14745,
-    "GBPEUR": 1.166
+    "EURUSD": 1.15234,
+    "GBPEUR": 1.1654
   },
   "positions": [
     {
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 107.35,
-      "value_eur": 3327.85,
+      "price_eur": 109.0,
+      "value_eur": 3379.0,
       "stale": false
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 340.36,
-      "value_eur": 1408.62,
+      "price_eur": 390.36,
+      "value_eur": 1615.59,
       "stale": false
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 17.944709933,
-      "price_eur": 161.52,
-      "value_eur": 2898.43,
+      "price_eur": 162.04,
+      "value_eur": 2907.76,
       "stale": false
     },
     {
       "symbol": "SEC0",
       "name": "iShares MSCI Global Semiconductors",
       "qty": 88.841625207,
-      "price_eur": 15.27,
-      "value_eur": 1356.61,
+      "price_eur": 16.06,
+      "value_eur": 1426.97,
       "stale": false
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 95.08,
-      "value_eur": 1140.96,
+      "price_eur": 93.24,
+      "value_eur": 1118.88,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 149.57,
-      "value_eur": 897.41,
+      "price_eur": 148.47,
+      "value_eur": 890.83,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 474.8,
-      "value_eur": 474.8,
+      "price_eur": 476.9,
+      "value_eur": 476.9,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 168.06,
-      "value_eur": 504.18,
+      "price_eur": 166.41,
+      "value_eur": 499.23,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 64.17,
-      "value_eur": 372.65,
+      "price_eur": 61.37,
+      "value_eur": 356.37,
       "stale": false
     }
   ],
@@ -89,6 +89,6 @@
     }
   ],
   "cash_eur": 3159.14,
-  "total_eur": 18371.78,
+  "total_eur": 18661.8,
   "stale_symbols": []
 }
