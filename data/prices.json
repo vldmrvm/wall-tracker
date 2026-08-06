@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-08-06T11:31:17Z",
+  "updated_utc": "2026-08-06T14:32:56Z",
   "fx": {
     "EURUSD": 1.1546,
     "GBPEUR": 1.1652
@@ -41,8 +41,8 @@
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 100.2,
-      "value_eur": 1202.4,
+      "price_eur": 100.15,
+      "value_eur": 1201.8,
       "stale": false
     },
     {
@@ -89,6 +89,6 @@
     }
   ],
   "cash_eur": 3159.14,
-  "total_eur": 19160.62,
+  "total_eur": 19160.02,
   "stale_symbols": []
 }
