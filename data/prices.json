@@ -1,8 +1,8 @@
 {
-  "updated_utc": "2026-08-14T16:04:02Z",
+  "updated_utc": "2026-08-17T07:13:49Z",
   "fx": {
-    "EURUSD": 1.15835,
-    "GBPEUR": 1.17
+    "EURUSD": 1.16009,
+    "GBPEUR": 1.1687
   },
   "positions": [
     {
@@ -17,8 +17,8 @@
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 429.95,
-      "value_eur": 1779.42,
+      "price_eur": 427.03,
+      "value_eur": 1767.36,
       "stale": false
     },
     {
@@ -49,8 +49,8 @@
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 134.08,
-      "value_eur": 804.49,
+      "price_eur": 133.93,
+      "value_eur": 803.6,
       "stale": false
     },
     {
@@ -65,30 +65,30 @@
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 164.33,
-      "value_eur": 492.99,
+      "price_eur": 164.74,
+      "value_eur": 494.21,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 67.53,
-      "value_eur": 392.17,
+      "price_eur": 67.37,
+      "value_eur": 391.27,
       "stale": false
     }
   ],
   "bonds": [
     {
       "name": "LHV Group 6% суборд 2034",
-      "value_eur": 2029.92
+      "value_eur": 2000.66
     },
     {
       "name": "Eesti Energia 5%",
-      "value_eur": 807.78
+      "value_eur": 808.11
     }
   ],
   "cash_eur": 3159.14,
-  "total_eur": 19216.19,
+  "total_eur": 19174.63,
   "stale_symbols": []
 }
