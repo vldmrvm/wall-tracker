@@ -1,16 +1,16 @@
 {
-  "updated_utc": "2026-08-17T08:58:37Z",
+  "updated_utc": "2026-08-17T09:55:14Z",
   "fx": {
     "EURUSD": 1.16023,
-    "GBPEUR": 1.1681
+    "GBPEUR": 1.1686
   },
   "positions": [
     {
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 111.7,
-      "value_eur": 3462.7,
+      "price_eur": 111.64,
+      "value_eur": 3460.84,
       "stale": false
     },
     {
@@ -25,40 +25,40 @@
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 17.944709933,
-      "price_eur": 169.0,
-      "value_eur": 3032.66,
+      "price_eur": 169.04,
+      "value_eur": 3033.37,
       "stale": false
     },
     {
       "symbol": "SEC0",
       "name": "iShares MSCI Global Semiconductors",
       "qty": 88.841625207,
-      "price_eur": 18.02,
-      "value_eur": 1600.93,
+      "price_eur": 18.0,
+      "value_eur": 1599.33,
       "stale": false
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 101.4,
-      "value_eur": 1216.8,
+      "price_eur": 101.5,
+      "value_eur": 1218.0,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 135.48,
-      "value_eur": 812.86,
+      "price_eur": 135.09,
+      "value_eur": 810.54,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 455.75,
-      "value_eur": 455.75,
+      "price_eur": 455.65,
+      "value_eur": 455.65,
       "stale": false
     },
     {
@@ -89,6 +89,6 @@
     }
   ],
   "cash_eur": 3159.14,
-  "total_eur": 19202.13,
+  "total_eur": 19198.17,
   "stale_symbols": []
 }
