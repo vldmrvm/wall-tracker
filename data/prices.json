@@ -1,94 +1,94 @@
 {
-  "updated_utc": "2026-08-20T15:46:53Z",
+  "updated_utc": "2026-08-21T07:05:22Z",
   "fx": {
-    "EURUSD": 1.16768,
-    "GBPEUR": 1.1671
+    "EURUSD": 1.17027,
+    "GBPEUR": 1.1664
   },
   "positions": [
     {
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 106.22,
-      "value_eur": 3292.82,
+      "price_eur": 106.78,
+      "value_eur": 3310.18,
       "stale": false
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 411.87,
-      "value_eur": 1704.62,
+      "price_eur": 411.14,
+      "value_eur": 1701.59,
       "stale": false
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 17.944709933,
-      "price_eur": 165.78,
-      "value_eur": 2974.87,
+      "price_eur": 166.5,
+      "value_eur": 2987.79,
       "stale": false
     },
     {
       "symbol": "SEC0",
       "name": "iShares MSCI Global Semiconductors",
       "qty": 88.841625207,
-      "price_eur": 16.72,
-      "value_eur": 1485.25,
+      "price_eur": 16.75,
+      "value_eur": 1488.1,
       "stale": false
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 101.8,
-      "value_eur": 1221.6,
+      "price_eur": 101.55,
+      "value_eur": 1218.6,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 140.9,
-      "value_eur": 845.42,
+      "price_eur": 140.55,
+      "value_eur": 843.31,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 445.15,
-      "value_eur": 445.15,
+      "price_eur": 456.0,
+      "value_eur": 456.0,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 163.61,
-      "value_eur": 490.82,
+      "price_eur": 164.27,
+      "value_eur": 492.81,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 68.63,
-      "value_eur": 398.57,
+      "price_eur": 68.48,
+      "value_eur": 397.69,
       "stale": false
     }
   ],
   "bonds": [
     {
       "name": "LHV Group 6% суборд 2034",
-      "value_eur": 2001.64
+      "value_eur": 2001.97
     },
     {
       "name": "Eesti Energia 5%",
-      "value_eur": 808.44
+      "value_eur": 808.55
     }
   ],
   "cash_eur": 3159.14,
-  "total_eur": 18828.35,
+  "total_eur": 18865.72,
   "stale_symbols": []
 }
