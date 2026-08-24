@@ -1,8 +1,8 @@
 {
-  "updated_utc": "2026-08-24T13:10:42Z",
+  "updated_utc": "2026-08-24T14:00:19Z",
   "fx": {
-    "EURUSD": 1.16754,
-    "GBPEUR": 1.1687
+    "EURUSD": 1.16686,
+    "GBPEUR": 1.1688
   },
   "positions": [
     {
@@ -11,70 +11,70 @@
       "qty": 31.0,
       "price_eur": 106.62,
       "value_eur": 3305.22,
-      "stale": false
+      "stale": true
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 413.9,
-      "value_eur": 1712.98,
+      "price_eur": 417.59,
+      "value_eur": 1728.27,
       "stale": false
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 17.944709933,
-      "price_eur": 165.8,
-      "value_eur": 2975.23,
+      "price_eur": 165.26,
+      "value_eur": 2965.54,
       "stale": false
     },
     {
       "symbol": "SEC0",
       "name": "iShares MSCI Global Semiconductors",
       "qty": 88.841625207,
-      "price_eur": 16.54,
-      "value_eur": 1469.8,
+      "price_eur": 16.24,
+      "value_eur": 1442.97,
       "stale": false
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 103.35,
-      "value_eur": 1240.2,
+      "price_eur": 104.3,
+      "value_eur": 1251.6,
       "stale": false
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 141.02,
-      "value_eur": 846.09,
+      "price_eur": 141.07,
+      "value_eur": 846.44,
       "stale": false
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 456.45,
-      "value_eur": 456.45,
+      "price_eur": 458.3,
+      "value_eur": 458.3,
       "stale": false
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 169.03,
-      "value_eur": 507.09,
+      "price_eur": 166.98,
+      "value_eur": 500.93,
       "stale": false
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 68.17,
-      "value_eur": 395.88,
+      "price_eur": 68.74,
+      "value_eur": 399.2,
       "stale": false
     }
   ],
@@ -89,6 +89,8 @@
     }
   ],
   "cash_eur": 3159.14,
-  "total_eur": 18879.92,
-  "stale_symbols": []
+  "total_eur": 18869.46,
+  "stale_symbols": [
+    "BNP"
+  ]
 }
