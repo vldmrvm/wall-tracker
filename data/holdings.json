@@ -52,5 +52,20 @@
   "cash": {
     "mmf_eur": 4664.9,
     "note": "MMF EUR 3471.13 + MMF USD 3.66 ($→€ по 0.87888) + cash EUR 1190.55, по выписке 27/09/2026"
-  }
+  },
+  "flows_comment": "Deposits (+) and withdrawals (-) in EUR from Lightyear statements; used for the VUAA benchmark.",
+  "flows": [
+    { "date": "2026-07-16", "eur": 2500 },
+    { "date": "2026-08-06", "eur": 4000 },
+    { "date": "2026-08-21", "eur": -300 },
+    { "date": "2026-08-27", "eur": -150 },
+    { "date": "2026-08-29", "eur": -100 },
+    { "date": "2026-08-29", "eur": -100 },
+    { "date": "2026-08-31", "eur": -50 },
+    { "date": "2026-09-10", "eur": 1000 },
+    { "date": "2026-09-20", "eur": -100 },
+    { "date": "2026-09-22", "eur": -200 },
+    { "date": "2026-09-24", "eur": -200 },
+    { "date": "2026-09-25", "eur": -50 }
+  ]
 }

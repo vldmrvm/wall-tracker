@@ -76,7 +76,7 @@ def bond_value(bond: dict, today: date) -> float:
 # ── бенчмарк: те же деньги в S&P 500 (VUAA, EUR, аккумулирующий) ───────
 BENCH_TICKER = "VUAA.DE"
 
-def build_benchmark(plan: dict) -> list[dict]:
+def build_benchmark(plan: dict, flows: list[dict] | None = None) -> list[dict]:
     """Симуляция: start_value вложен в S&P 500 ETF на дату старта,
     каждое 10-е число докупка на plan.monthly по цене первого торгового дня >= 10."""
     import yfinance as yf
@@ -92,6 +92,14 @@ def build_benchmark(plan: dict) -> list[dict]:
         print(f"WARN: нет данных бенчмарка {BENCH_TICKER}", file=sys.stderr)
         return []
 
+    # Real cash flows (deposits > 0, withdrawals < 0) if known, otherwise plan contributions
+    pending = sorted(
+        ((_date.fromisoformat(f["date"]), float(f["eur"])) for f in (flows or [])),
+        key=lambda x: x[0],
+    )
+    use_flows = bool(pending)
+    pending = [f for f in pending if f[0] > start]
+
     monthly = float(plan.get("monthly", 0))
     units = 0.0
     contributed_months: set[tuple[int, int]] = set()
@@ -106,10 +114,15 @@ def build_benchmark(plan: dict) -> list[dict]:
         if first:
             units = float(plan["start_value"]) / price
             first = False
-        key = (d.year, d.month)
-        if d.day >= 10 and key not in contributed_months and d > start:
-            units += monthly / price
-            contributed_months.add(key)
+        if use_flows:
+            # Apply every flow dated on or before this trading day at today's price
+            while pending and pending[0][0] <= d:
+                units += pending.pop(0)[1] / price
+        else:
+            key = (d.year, d.month)
+            if d.day >= 10 and key not in contributed_months and d > start:
+                units += monthly / price
+                contributed_months.add(key)
         series.append({"date": d.isoformat(), "total_eur": round(units * price, 2)})
     return series
 
@@ -190,7 +203,7 @@ def main() -> None:
     history.sort(key=lambda h: h["date"])
     HISTORY_F.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    bench = build_benchmark(holdings["plan"])
+    bench = build_benchmark(holdings["plan"], holdings.get("flows"))
     (DATA / "benchmark.json").write_text(
         json.dumps({"ticker": BENCH_TICKER, "updated_utc": prices["updated_utc"],
                     "series": bench}, ensure_ascii=False, indent=2), encoding="utf-8")
