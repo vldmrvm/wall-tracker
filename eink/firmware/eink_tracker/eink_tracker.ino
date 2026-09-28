@@ -70,11 +70,25 @@ bool downloadImage() {
     http.end();
     return false;
   }
+  Serial.printf("Content-Length: %d\n", http.getSize());
+
+  // TLS data arrives in chunks: keep reading until full image or 20 s timeout
   WiFiClient* stream = http.getStreamPtr();
-  stream->setTimeout(10000);
-  size_t got = stream->readBytes(img, IMG_BYTES);
+  size_t got = 0;
+  uint32_t start = millis();
+  while (got < IMG_BYTES && millis() - start < 20000) {
+    size_t avail = stream->available();
+    if (avail) {
+      size_t want = min(avail, IMG_BYTES - got);
+      got += stream->readBytes(img + got, want);
+    } else if (!stream->connected()) {
+      break;  // server closed the connection
+    } else {
+      delay(10);
+    }
+  }
   http.end();
-  Serial.printf("Downloaded %u bytes\n", (unsigned)got);
+  Serial.printf("Downloaded %u of %u bytes\n", (unsigned)got, (unsigned)IMG_BYTES);
   return got == IMG_BYTES;
 }
 
