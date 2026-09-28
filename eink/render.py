@@ -95,6 +95,7 @@ def load_metrics() -> dict:
     for p in history:
         b = value_on(bench, date.fromisoformat(p["date"]))
         vb.append(100.0 * b / target if b else me[len(vb)])
+    pl = [100.0 * plan_value(plan, date.fromisoformat(p["date"])) / target for p in history]
 
     updated = prices.get("updated_utc", history[-1]["date"])
     upd = datetime.fromisoformat(updated.replace("Z", "+00:00")).strftime("%d.%m.%Y")
@@ -106,6 +107,7 @@ def load_metrics() -> dict:
         "vs_plan": vs_plan,
         "me": me,
         "bench": vb,
+        "plan": pl,
         "since": date.fromisoformat(history[0]["date"]).strftime("since %b %Y"),
         "updated": upd,
     }
@@ -113,6 +115,8 @@ def load_metrics() -> dict:
 
 # ── drawing helpers ────────────────────────────────────────────────────
 def signed(v: float, unit: str = "%") -> str:
+    if abs(v) < 0.05:
+        v = 0.0  # avoid "-0.0"
     return f"{v:+.1f}{unit}".replace("-", "−")
 
 
@@ -137,8 +141,8 @@ def dashed_line(d, pts, dash=4, gap=3):
                 acc, on = 0.0, not on
 
 
-def chart(d, x, y, w, h, main, dashed):
-    lo, hi = min(main + dashed), max(main + dashed)
+def chart(d, x, y, w, h, main, dashed, thin):
+    lo, hi = min(main + dashed + thin), max(main + dashed + thin)
     pad = max((hi - lo) * 0.08, 0.5)
     lo, hi = lo - pad, hi + pad
     n = max(len(main) - 1, 1)
@@ -153,8 +157,9 @@ def chart(d, x, y, w, h, main, dashed):
         for gx in range(x, x + w, 4):
             d.point((gx, gy), fill=BLACK)
         d.text((x + w + 3, gy - 6), f"{v:.0f}%", font=lf, fill=BLACK)
-    dashed_line(d, pts(dashed))
-    d.line(pts(main), fill=BLACK, width=2)
+    d.line(pts(thin), fill=BLACK, width=1)  # plan: thin solid
+    dashed_line(d, pts(dashed))             # benchmark: dashed
+    d.line(pts(main), fill=BLACK, width=2)  # portfolio: thick solid
     return pts(main)[-1]
 
 
@@ -165,13 +170,15 @@ def render(m: dict) -> Image.Image:
 
     # Left: % of goal over time, me vs VUAA
     d.text((12, 8), "Progress to goal", font=font(14, bold=True), fill=BLACK)
-    ex, ey = chart(d, 12, 40, 218, 206, m["me"], m["bench"])
+    ex, ey = chart(d, 12, 40, 218, 206, m["me"], m["bench"], m["plan"])
     d.ellipse([ex - 3, ey - 3, ex + 3, ey + 3], fill=BLACK)
     lf = font(11)
     d.line([12, 262, 28, 262], fill=BLACK, width=2)
     d.text((32, 255), "me", font=lf, fill=BLACK)
     dashed_line(d, [(60, 262), (76, 262)])
     d.text((80, 255), "VUAA", font=lf, fill=BLACK)
+    d.line([118, 262, 134, 262], fill=BLACK, width=1)
+    d.text((138, 255), "plan", font=lf, fill=BLACK)
     d.text((258 - tw(d, m["since"], lf), 255), m["since"], font=lf, fill=BLACK)
 
     d.line([270, 12, 270, 268], fill=BLACK)
