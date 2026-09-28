@@ -82,8 +82,16 @@ def load_metrics() -> dict:
     total = float(prices.get("total_eur") or history[-1]["total_eur"])
 
     goal_pct = 100.0 * total / target
-    month_ago = value_on(history, last_day - timedelta(days=30)) or history[0]["total_eur"]
-    month_pp = goal_pct - 100.0 * month_ago / target  # how much closer to goal in 30 days
+    # 30-day return excluding deposits/withdrawals
+    base_day = last_day - timedelta(days=30)
+    base_pts = [p for p in history if date.fromisoformat(p["date"]) <= base_day]
+    base = base_pts[-1] if base_pts else history[0]
+    base_date = date.fromisoformat(base["date"])
+    net_flows = sum(
+        float(f["eur"]) for f in holdings.get("flows", [])
+        if base_date < date.fromisoformat(f["date"]) <= last_day
+    )
+    month_ret = 100.0 * (total - base["total_eur"] - net_flows) / base["total_eur"]
 
     bench_now = value_on(bench, last_day)
     vs_bench = 100.0 * (total / bench_now - 1) if bench_now else 0.0
@@ -102,7 +110,7 @@ def load_metrics() -> dict:
 
     return {
         "goal_pct": min(goal_pct, 100.0),
-        "month_pp": month_pp,
+        "month_ret": month_ret,
         "vs_bench": vs_bench,
         "vs_plan": vs_plan,
         "me": me,
@@ -197,7 +205,7 @@ def render(m: dict) -> Image.Image:
     # Right: three metrics
     lab, val = font(11), font(13, bold=True)
     rows = [
-        ("Month", signed(m["month_pp"], "pp")),
+        ("Month", signed(m["month_ret"])),
         ("vs VUAA", signed(m["vs_bench"])),
         ("vs plan", signed(m["vs_plan"])),
     ]
@@ -231,7 +239,7 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     img.save(OUT / "screen.png")
     (OUT / "screen.bin").write_bytes(to_bin(img))
-    print(f"OK: goal {m['goal_pct']:.1f}%, month {m['month_pp']:+.1f}pp, "
+    print(f"OK: goal {m['goal_pct']:.1f}%, month {m['month_ret']:+.1f}%, "
           f"vs VUAA {m['vs_bench']:+.1f}%, vs plan {m['vs_plan']:+.1f}%")
 
 
