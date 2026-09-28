@@ -20,15 +20,20 @@ jobs:
           python-version: "3.12"
 
       - name: Install deps
-        run: pip install yfinance
+        run: |
+          pip install yfinance pillow
+          sudo apt-get install -y -qq fonts-dejavu-core
 
       - name: Update prices
         run: python scripts/update_prices.py
+
+      - name: Render e-ink screen
+        run: python eink/render.py
 
       - name: Commit & push
         run: |
           git config user.name "wall-bot"
           git config user.email "wall-bot@users.noreply.github.com"
-          git add data/prices.json data/history.json data/benchmark.json
+          git add data/prices.json data/history.json data/benchmark.json eink/out/screen.bin eink/out/screen.png
           git diff --cached --quiet || git commit -m "prices $(date -u +'%Y-%m-%d %H:%M')"
           git push
