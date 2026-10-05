@@ -19,7 +19,7 @@
     { "symbol": "TM",   "yahoo": "TM",      "qty": 3.0,           "name": "Toyota (ADR)" },
     { "symbol": "NFLX", "yahoo": "NFLX",    "qty": 5.80741023,    "name": "Netflix" },
     { "symbol": "QDVF", "yahoo": "QDVF.DE", "qty": 69.868863597,  "name": "iShares S&P 500 Energy Sector" },
-    { "symbol": "VUAA", "yahoo": "VUAA.DE", "qty": 1.524622655,   "name": "Vanguard S&P 500 (Acc)" }
+    { "symbol": "VUAA", "yahoo": "VUAA.DE", "qty": 3.038741816,   "name": "Vanguard S&P 500 (Acc)" }
   ],
   "bonds": [
     {
@@ -50,8 +50,8 @@
     }
   ],
   "cash": {
-    "mmf_eur": 4664.9,
-    "note": "MMF EUR 3471.13 + MMF USD 3.66 ($→€ по 0.87888) + cash EUR 1190.55, по выписке 27/09/2026"
+    "mmf_eur": 4499.74,
+    "note": "MMF EUR 3478.21 + MMF USD 3.67 ($→€ по 0.88865) + cash EUR 1015.65 + cash USD 2.95, по выписке 04/10/2026"
   },
   "flows_comment": "Deposits (+) and withdrawals (-) in EUR from Lightyear statements; used for the VUAA benchmark.",
   "flows": [
