@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "wall-bot"
           git config user.email "wall-bot@users.noreply.github.com"
-          git add data/prices.json data/history.json data/benchmark.json eink/out/screen.bin eink/out/screen.png
+          git add data/prices.json data/history.json data/benchmark.json eink/out/
           git diff --cached --quiet || git commit -m "prices $(date -u +'%Y-%m-%d %H:%M')"
           # Rebase on top of any commits pushed while this run was working
           git pull --rebase origin main

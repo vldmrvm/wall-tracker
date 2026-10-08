@@ -23,8 +23,9 @@ HISTORY_F = DATA / "history.json"
 
 
 # ── котировки ──────────────────────────────────────────────────────────
-def fetch_quotes(tickers: list[str]) -> dict[str, float]:
-    """Последняя цена по каждому тикеру. Падает по одному тикеру — не падает весь скрипт."""
+def fetch_quotes(tickers: list[str], prev_close: dict[str, float] | None = None) -> dict[str, float]:
+    """Последняя цена по каждому тикеру. Падает по одному тикеру — не падает весь скрипт.
+    If prev_close is given, it is filled with the previous close (for day change)."""
     import yfinance as yf
 
     out: dict[str, float] = {}
@@ -33,6 +34,8 @@ def fetch_quotes(tickers: list[str]) -> dict[str, float]:
             h = yf.Ticker(t).history(period="5d")
             if len(h):
                 out[t] = float(h["Close"].iloc[-1])
+                if prev_close is not None and len(h) >= 2:
+                    prev_close[t] = float(h["Close"].iloc[-2])
             else:
                 print(f"WARN: нет данных по {t}", file=sys.stderr)
         except Exception as e:  # noqa: BLE001
@@ -133,7 +136,8 @@ def main() -> None:
     today = datetime.now(timezone.utc)
 
     tickers = [p["yahoo"] for p in holdings["positions"]]
-    quotes = fetch_quotes(tickers + ["EURUSD=X", "GBPEUR=X"])
+    prev_close: dict[str, float] = {}
+    quotes = fetch_quotes(tickers + ["EURUSD=X", "GBPEUR=X"], prev_close)
 
     fx = {
         "EURUSD": quotes.get("EURUSD=X", 1.10),
@@ -168,6 +172,9 @@ def main() -> None:
             "symbol": sym, "name": p["name"], "qty": qty,
             "price_eur": round(price_eur, 2), "value_eur": round(value, 2),
             "stale": sym in stale,
+            # day change in the listing currency, so FX moves are ignored
+            "day_pct": (round(100.0 * (quotes[t] / prev_close[t] - 1), 2)
+                        if t in quotes and prev_close.get(t) else None),
         })
 
     bond_rows = []

@@ -3,8 +3,8 @@
 Render the 400x300 e-ink screen for the wall tracker (percent-only, no EUR shown).
 
 Inputs : data/holdings.json (plan), data/history.json, data/benchmark.json, data/prices.json
-Outputs: eink/out/screen.png  - preview
-         eink/out/screen.bin  - raw 1-bit bitmap for the ESP32 (15000 bytes, 1 = black, MSB first)
+Outputs: eink/out/screen{,1,2}.png  - previews (main, holdings, vs plan/VUAA)
+         eink/out/screen{,1,2}.bin  - raw 1-bit bitmaps for the ESP32 (15000 bytes, 1 = black, MSB first)
 
 Run: python eink/render.py      Deps: pip install pillow
 """
@@ -105,6 +105,30 @@ def load_metrics() -> dict:
         vb.append(100.0 * b / target if b else me[len(vb)])
     pl = [100.0 * plan_value(plan, date.fromisoformat(p["date"])) / target for p in history]
 
+    # Deviation over time: portfolio vs plan and vs VUAA, in %
+    dev_plan = [100.0 * (p["total_eur"] / plan_value(plan, date.fromisoformat(p["date"])) - 1)
+                for p in history]
+    dev_bench = []
+    for p in history:
+        b = value_on(bench, date.fromisoformat(p["date"]))
+        dev_bench.append(100.0 * (p["total_eur"] / b - 1) if b else 0.0)
+
+    # Holdings: weight in portfolio and day change
+    items = [{"name": r["symbol"], "value": float(r["value_eur"]), "day": r.get("day_pct")}
+             for r in prices.get("positions", [])]
+    bonds_v = sum(float(b["value_eur"]) for b in prices.get("bonds", []))
+    if bonds_v:
+        items.append({"name": "Bonds", "value": bonds_v, "day": None})
+    cash_v = float(prices.get("cash_eur") or 0)
+    if cash_v:
+        items.append({"name": "Cash/MMF", "value": cash_v, "day": None})
+    for it in items:
+        it["weight"] = 100.0 * it["value"] / total
+    items.sort(key=lambda it: -it["weight"])
+    # Portfolio day change from positions only (deposits do not distort it)
+    day_eur = sum(it["value"] * it["day"] / (100 + it["day"]) for it in items if it["day"] is not None)
+    day_ret = 100.0 * day_eur / (total - day_eur)
+
     updated = prices.get("updated_utc", history[-1]["date"])
     upd = datetime.fromisoformat(updated.replace("Z", "+00:00")).strftime("%d.%m.%Y")
 
@@ -118,6 +142,11 @@ def load_metrics() -> dict:
         "plan": pl,
         "since": date.fromisoformat(history[0]["date"]).strftime("since %b %Y"),
         "updated": upd,
+        "dev_plan": dev_plan,
+        "dev_bench": dev_bench,
+        "dates": [p["date"] for p in history],
+        "items": items,
+        "day_ret": day_ret,
     }
 
 
@@ -225,6 +254,93 @@ def render(m: dict) -> Image.Image:
     return img
 
 
+# ── screen 1: holdings ─────────────────────────────────────────────────
+def render_positions(m: dict) -> Image.Image:
+    img = Image.new("1", (W, H), WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((12, 8), "Holdings", font=font(14, bold=True), fill=BLACK)
+    hf = font(11)
+    s = "today " + signed(m["day_ret"])
+    d.text((W - 12 - tw(d, s, font(13, bold=True)), 8), s, font=font(13, bold=True), fill=BLACK)
+    d.text((W - 12 - tw(d, "day", hf), 32), "day", font=hf, fill=BLACK)
+    d.text((262 - tw(d, "weight", hf), 32), "weight", font=hf, fill=BLACK)
+
+    items = m["items"][:15]
+    top, bottom = 50, 270
+    step = (bottom - top) / max(len(items), 1)
+    step = min(step, 18)
+    max_w = max(it["weight"] for it in items)
+    lf, vf = font(12), font(12, bold=True)
+    bar_x, bar_w = 90, 120
+    for i, it in enumerate(items):
+        y = top + i * step
+        d.text((12, y), it["name"], font=lf, fill=BLACK)
+        bw = bar_w * it["weight"] / max_w
+        d.rectangle([bar_x, y + 3, bar_x + bw, y + step - 5], fill=BLACK)
+        ws = f"{it['weight']:.0f}%"
+        d.text((262 - tw(d, ws, lf), y), ws, font=lf, fill=BLACK)
+        ds = signed(it["day"]) if it["day"] is not None else "–"
+        d.text((W - 12 - tw(d, ds, vf), y), ds, font=vf, fill=BLACK)
+
+    d.line([12, 276, W - 12, 276], fill=BLACK)
+    ff = font(12)
+    s = f"upd {m['updated']}"
+    d.text((W - 12 - tw(d, s, ff), 282), s, font=ff, fill=BLACK)
+    return img
+
+
+# ── screen 2: deviation from plan and VUAA ─────────────────────────────
+def render_deviation(m: dict) -> Image.Image:
+    img = Image.new("1", (W, H), WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((12, 8), "Me vs plan / VUAA", font=font(14, bold=True), fill=BLACK)
+
+    big = font(18, bold=True)
+    lab = font(11)
+    for right, label, v in ((300, "vs plan", m["vs_plan"]), (W - 12, "vs VUAA", m["vs_bench"])):
+        s = signed(v)
+        d.text((right - tw(d, s, big), 6), s, font=big, fill=BLACK)
+        d.text((right - tw(d, label, lab), 30), label, font=lab, fill=BLACK)
+
+    x0, y0, w, h = 12, 60, 340, 190
+    plan_s, bench_s = m["dev_plan"], m["dev_bench"]
+    lo = min(plan_s + bench_s + [0.0])
+    hi = max(plan_s + bench_s + [0.0])
+    pad = max((hi - lo) * 0.08, 0.5)
+    lo, hi = lo - pad, hi + pad
+    n = max(len(plan_s) - 1, 1)
+
+    def yy(v):
+        return y0 + h - h * (v - lo) / (hi - lo)
+
+    def pts(series):
+        return [(x0 + w * i / n, yy(v)) for i, v in enumerate(series)]
+
+    # zero line = on plan / equal to VUAA
+    d.line([x0, yy(0), x0 + w, yy(0)], fill=BLACK)
+    d.text((x0 + w + 4, yy(0) - 6), "0%", font=lab, fill=BLACK)
+    for v in (hi - pad, lo + pad):
+        if abs(yy(v) - yy(0)) > 14:
+            gy = yy(v)
+            for gx in range(x0, x0 + w, 4):
+                d.point((gx, gy), fill=BLACK)
+            d.text((x0 + w + 4, gy - 6), f"{v:+.0f}%".replace("-", "−"), font=lab, fill=BLACK)
+    d.line(pts(plan_s), fill=BLACK, width=2)
+    dashed_line(d, pts(bench_s))
+
+    d.line([12, 262, 28, 262], fill=BLACK, width=2)
+    d.text((32, 255), "vs plan", font=lab, fill=BLACK)
+    dashed_line(d, [(90, 262), (106, 262)])
+    d.text((110, 255), "vs VUAA", font=lab, fill=BLACK)
+    d.text((x0 + w - tw(d, m["since"], lab), 255), m["since"], font=lab, fill=BLACK)
+
+    d.line([12, 276, W - 12, 276], fill=BLACK)
+    ff = font(12)
+    s = f"upd {m['updated']}"
+    d.text((W - 12 - tw(d, s, ff), 282), s, font=ff, fill=BLACK)
+    return img
+
+
 def to_bin(img: Image.Image) -> bytes:
     """Pack as 1 bit per pixel, MSB first, 1 = black (GxEPD2 drawBitmap format)."""
     inv = ImageOps.invert(img.convert("L")).convert("1")
@@ -235,10 +351,12 @@ def to_bin(img: Image.Image) -> bytes:
 
 def main() -> None:
     m = load_metrics()
-    img = render(m)
     OUT.mkdir(parents=True, exist_ok=True)
-    img.save(OUT / "screen.png")
-    (OUT / "screen.bin").write_bytes(to_bin(img))
+    # screen.bin is the main screen; screen1/2 are opened with NFC tags
+    screens = {"screen": render(m), "screen1": render_positions(m), "screen2": render_deviation(m)}
+    for name, img in screens.items():
+        img.save(OUT / f"{name}.png")
+        (OUT / f"{name}.bin").write_bytes(to_bin(img))
     print(f"OK: goal {m['goal_pct']:.1f}%, month {m['month_ret']:+.1f}%, "
           f"vs VUAA {m['vs_bench']:+.1f}%, vs plan {m['vs_plan']:+.1f}%")
 
