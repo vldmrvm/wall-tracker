@@ -1,130 +1,130 @@
 {
-  "updated_utc": "2026-11-09T16:08:23Z",
+  "updated_utc": "2026-11-10T14:47:40Z",
   "fx": {
-    "EURUSD": 1.12007,
-    "GBPEUR": 1.1967
+    "EURUSD": 1.11832,
+    "GBPEUR": 1.1962
   },
   "positions": [
     {
       "symbol": "BNP",
       "name": "BNP Paribas",
       "qty": 31.0,
-      "price_eur": 94.29,
-      "value_eur": 2922.99,
+      "price_eur": 96.46,
+      "value_eur": 2990.26,
       "stale": false,
-      "day_pct": 2.57
+      "day_pct": 2.64
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 482.92,
-      "value_eur": 1998.63,
+      "price_eur": 484.64,
+      "value_eur": 2005.76,
       "stale": false,
-      "day_pct": 1.94
+      "day_pct": -0.59
     },
     {
       "symbol": "VWCE",
       "name": "Vanguard FTSE All-World",
       "qty": 17.944709933,
-      "price_eur": 167.74,
-      "value_eur": 3010.05,
+      "price_eur": 167.22,
+      "value_eur": 3000.71,
       "stale": false,
-      "day_pct": 1.15
+      "day_pct": -0.12
     },
     {
       "symbol": "KLAR",
       "name": "Klarna Group",
       "qty": 111.0,
-      "price_eur": 11.99,
-      "value_eur": 1330.43,
+      "price_eur": 11.75,
+      "value_eur": 1303.73,
       "stale": false,
-      "day_pct": -1.29
+      "day_pct": -2.41
     },
     {
       "symbol": "PUB",
       "name": "Publicis Groupe",
       "qty": 12.0,
-      "price_eur": 102.95,
-      "value_eur": 1235.4,
+      "price_eur": 104.0,
+      "value_eur": 1248.0,
       "stale": false,
-      "day_pct": 0.0
+      "day_pct": 0.73
     },
     {
       "symbol": "AZN",
       "name": "AstraZeneca",
       "qty": 6.0,
-      "price_eur": 168.81,
-      "value_eur": 1012.84,
+      "price_eur": 167.49,
+      "value_eur": 1004.95,
       "stale": false,
-      "day_pct": 1.26
+      "day_pct": -0.45
     },
     {
       "symbol": "VUSA",
       "name": "Vanguard S&P 500",
       "qty": 11.100190617,
-      "price_eur": 127.55,
-      "value_eur": 1415.78,
+      "price_eur": 127.09,
+      "value_eur": 1410.77,
       "stale": false,
-      "day_pct": 0.95
+      "day_pct": -0.14
     },
     {
       "symbol": "MC",
       "name": "LVMH",
       "qty": 1.0,
-      "price_eur": 401.25,
-      "value_eur": 401.25,
+      "price_eur": 406.15,
+      "value_eur": 406.15,
       "stale": false,
-      "day_pct": -1.83
+      "day_pct": 0.92
     },
     {
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 194.84,
-      "value_eur": 584.51,
+      "price_eur": 192.02,
+      "value_eur": 576.06,
       "stale": false,
-      "day_pct": 0.94
+      "day_pct": -1.73
     },
     {
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 56.88,
-      "value_eur": 330.33,
+      "price_eur": 56.18,
+      "value_eur": 326.28,
       "stale": false,
-      "day_pct": 0.47
+      "day_pct": -1.75
     },
     {
       "symbol": "VUAA",
       "name": "Vanguard S&P 500 (Acc)",
       "qty": 4.528074206,
-      "price_eur": 130.22,
-      "value_eur": 589.65,
+      "price_eur": 129.87,
+      "value_eur": 588.06,
       "stale": false,
-      "day_pct": 0.97
+      "day_pct": -0.05
     },
     {
       "symbol": "GOOGL",
       "name": "Alphabet",
       "qty": 0.031541725,
-      "price_eur": 261.32,
-      "value_eur": 8.24,
+      "price_eur": 258.1,
+      "value_eur": 8.14,
       "stale": false,
-      "day_pct": 2.78
+      "day_pct": 0.17
     }
   ],
   "bonds": [
     {
       "name": "LHV Group 6% суборд 2034",
-      "value_eur": 2028.27
+      "value_eur": 2028.6
     },
     {
       "name": "Eesti Energia 5%",
-      "value_eur": 807.23
+      "value_eur": 807.34
     }
   ],
   "cash_eur": 6157.75,
-  "total_eur": 23833.35,
+  "total_eur": 23862.57,
   "stale_symbols": []
 }
