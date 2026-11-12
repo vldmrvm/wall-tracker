@@ -1,7 +1,7 @@
 {
-  "updated_utc": "2026-11-12T07:42:00Z",
+  "updated_utc": "2026-11-12T07:43:29Z",
   "fx": {
-    "EURUSD": 1.10852,
+    "EURUSD": 1.1084,
     "GBPEUR": 1.1968
   },
   "positions": [
@@ -18,8 +18,8 @@
       "symbol": "MSFT",
       "name": "Microsoft",
       "qty": 4.138681192,
-      "price_eur": 470.11,
-      "value_eur": 1945.64,
+      "price_eur": 470.16,
+      "value_eur": 1945.86,
       "stale": false,
       "day_pct": -2.26
     },
@@ -37,7 +37,7 @@
       "name": "Klarna Group",
       "qty": 111.0,
       "price_eur": 12.15,
-      "value_eur": 1348.79,
+      "value_eur": 1348.94,
       "stale": false,
       "day_pct": 2.51
     },
@@ -72,8 +72,8 @@
       "symbol": "TM",
       "name": "Toyota (ADR)",
       "qty": 3.0,
-      "price_eur": 192.15,
-      "value_eur": 576.44,
+      "price_eur": 192.17,
+      "value_eur": 576.51,
       "stale": false,
       "day_pct": -0.83
     },
@@ -81,8 +81,8 @@
       "symbol": "NFLX",
       "name": "Netflix",
       "qty": 5.80741023,
-      "price_eur": 58.22,
-      "value_eur": 338.12,
+      "price_eur": 58.23,
+      "value_eur": 338.15,
       "stale": false,
       "day_pct": 2.02
     },
@@ -99,7 +99,7 @@
       "symbol": "GOOGL",
       "name": "Alphabet",
       "qty": 0.031541725,
-      "price_eur": 264.72,
+      "price_eur": 264.75,
       "value_eur": 8.35,
       "stale": false,
       "day_pct": 2.11
@@ -108,8 +108,8 @@
       "symbol": "NVDA",
       "name": "NVIDIA",
       "qty": 6.225013452,
-      "price_eur": 156.72,
-      "value_eur": 975.6,
+      "price_eur": 156.74,
+      "value_eur": 975.7,
       "stale": false,
       "day_pct": 2.87
     }
@@ -125,6 +125,6 @@
     }
   ],
   "cash_eur": 5049.23,
-  "total_eur": 24477.08,
+  "total_eur": 24477.66,
   "stale_symbols": []
 }
