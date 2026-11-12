@@ -89,7 +89,7 @@ def build_benchmark(plan: dict, flows: list[dict] | None = None) -> list[dict]:
 
     start = _date.fromisoformat(plan["start_date"])
     try:
-        h = yf.Ticker(BENCH_TICKER).history(start=start.isoformat())
+        h = yf.Ticker(BENCH_TICKER).history(start=start.isoformat()).dropna(subset=["Close"])
     except Exception as e:  # noqa: BLE001
         print(f"WARN: benchmark {BENCH_TICKER}: {e}", file=sys.stderr)
         return []
