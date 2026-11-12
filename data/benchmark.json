@@ -1,6 +1,6 @@
 {
   "ticker": "VUAA.DE",
-  "updated_utc": "2026-11-11T21:24:26Z",
+  "updated_utc": "2026-11-12T07:40:11Z",
   "series": [
     {
       "date": "2026-07-09",
@@ -312,55 +312,55 @@
     },
     {
       "date": "2026-10-26",
-      "total_eur": 23935.6
+      "total_eur": 23835.6
     },
     {
       "date": "2026-10-27",
-      "total_eur": 24165.26
+      "total_eur": 24064.3
     },
     {
       "date": "2026-10-28",
-      "total_eur": 24203.98
+      "total_eur": 24102.86
     },
     {
       "date": "2026-10-29",
-      "total_eur": 24101.31
+      "total_eur": 23950.62
     },
     {
       "date": "2026-10-30",
-      "total_eur": 23731.16
+      "total_eur": 23582.78
     },
     {
       "date": "2026-11-02",
-      "total_eur": 23745.57
+      "total_eur": 23397.1
     },
     {
       "date": "2026-11-03",
-      "total_eur": 23585.26
+      "total_eur": 23239.15
     },
     {
       "date": "2026-11-04",
-      "total_eur": 23853.64
+      "total_eur": 23503.59
     },
     {
       "date": "2026-11-05",
-      "total_eur": 23243.93
+      "total_eur": 22902.82
     },
     {
       "date": "2026-11-06",
-      "total_eur": 23230.42
+      "total_eur": 22889.51
     },
     {
       "date": "2026-11-09",
-      "total_eur": 23404.24
+      "total_eur": 23060.78
     },
     {
       "date": "2026-11-10",
-      "total_eur": 23448.37
+      "total_eur": 24104.26
     },
     {
       "date": "2026-11-11",
-      "total_eur": 23919.39
+      "total_eur": NaN
     }
   ]
 }
