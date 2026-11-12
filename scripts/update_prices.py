@@ -32,6 +32,8 @@ def fetch_quotes(tickers: list[str], prev_close: dict[str, float] | None = None)
     for t in tickers:
         try:
             h = yf.Ticker(t).history(period="5d")
+            # Yahoo can return today's row without a close (market just opened): drop it
+            h = h.dropna(subset=["Close"])
             if len(h):
                 out[t] = float(h["Close"].iloc[-1])
                 if prev_close is not None and len(h) >= 2:
